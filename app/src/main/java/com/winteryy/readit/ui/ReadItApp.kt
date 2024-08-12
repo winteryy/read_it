@@ -1,29 +1,21 @@
 package com.winteryy.readit.ui
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.winteryy.readit.R
 import com.winteryy.readit.ui.theme.ReadItTheme
-
-sealed class MainNavigationItem(val route: String, val name: String) {
-    data object Main : MainNavigationItem(ReadItDestinations.HOME_ROUTE, "main")
-    data object Comment : MainNavigationItem(ReadItDestinations.COMMENT_ROUTE, "comment")
-    data object MyPage : MainNavigationItem(ReadItDestinations.MY_PAGE_ROUTE, "my_page")
-}
+import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
 @Composable
 fun ReadItApp() {
@@ -45,13 +37,13 @@ fun ReadItApp() {
 @Composable
 fun MainBottomNavigationBar(navController: NavHostController) {
     val bottomNavigationItems = listOf(
-        MainNavigationItem.Main,
-        MainNavigationItem.Comment,
-        MainNavigationItem.MyPage
+        ReadItNavigationItem.Main,
+        ReadItNavigationItem.Comment,
+        ReadItNavigationItem.MyPage
     )
 
     NavigationBar(
-        containerColor = colorResource(id = R.color.teal_200),
+        containerColor = theme_grey_whiteSmoke,
     ) {
         val navActions = remember(navController) {
             ReadItNavigationActions(navController)
@@ -70,7 +62,9 @@ fun MainBottomNavigationBar(navController: NavHostController) {
                         ReadItDestinations.MY_PAGE_ROUTE -> navActions.navigateToMyPage()
                     }
                 },
-                icon = { Icon(imageVector = Icons.Filled.Add, contentDescription = "test") })
+                icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
+                label = { Text(text = item.label) }
+                )
         }
     }
 }
