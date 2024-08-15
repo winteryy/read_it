@@ -8,9 +8,9 @@ interface NaverBookApiService {
     @GET("v1/search/book.json")
     suspend fun searchBooks(
         @Query("query") query: String,
-        @Query("query") start: Int,
-        @Query("query") display: Int,
-        @Query("query") sort: String
+        @Query("start") start: Int,
+        @Query("display") display: Int,
+        @Query("sort") sort: String
     ): SearchResponse
 
 }

@@ -31,7 +31,7 @@ data class BookItemResponse(
     @SerializedName("publisher")
     val publisher: String,
     @SerializedName("isbn")
-    val isbn: Int,
+    val isbn: String,
     @SerializedName("description")
     val description: String,
     @SerializedName("pubdate")

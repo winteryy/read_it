@@ -1,5 +1,7 @@
 package com.winteryy.readit.data.di
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.winteryy.readit.data.search.NaverBookApiService
 import dagger.Module
 import dagger.Provides
@@ -11,6 +13,8 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -52,7 +56,11 @@ object RetrofitModule {
     @Provides
     @Singleton
     fun provideGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create()
+        return GsonConverterFactory.create(
+            GsonBuilder()
+                .setDateFormat("EEE, dd MMM YYYY HH:mm:ss XX")
+                .create()
+        )
     }
 
     @Provides

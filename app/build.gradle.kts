@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.google.dagger.hilt.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -55,6 +56,9 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    //ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -66,6 +70,7 @@ dependencies {
 
     //Navigation
     implementation(libs.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     //Retrofit
     implementation(libs.retrofit)
@@ -75,13 +80,12 @@ dependencies {
 
     //Room
     implementation(libs.androidx.room.runtime)
-    annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
     //Hilt
     implementation (libs.hilt.android)
-    ksp (libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)
 
