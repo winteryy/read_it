@@ -1,6 +1,7 @@
 package com.winteryy.readit.data.search
 
 import com.google.gson.annotations.SerializedName
+import com.winteryy.readit.model.Book
 import java.util.Date
 
 data class SearchResponse(
@@ -35,4 +36,16 @@ data class BookItemResponse(
     val description: String,
     @SerializedName("pubdate")
     val pubDate: Date,
-)
+) {
+    fun toBook(): Book = Book(
+        title = title,
+        image = image,
+        author = author,
+        publisher = publisher,
+        isbn = isbn,
+        description = description,
+        pubDate = pubDate
+    )
+}
+
+
