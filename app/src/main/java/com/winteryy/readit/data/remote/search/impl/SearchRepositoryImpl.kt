@@ -1,8 +1,8 @@
-package com.winteryy.readit.data.search.impl
+package com.winteryy.readit.data.remote.search.impl
 
 import com.winteryy.readit.data.Result
-import com.winteryy.readit.data.search.NaverBookApiService
-import com.winteryy.readit.data.search.SearchRepository
+import com.winteryy.readit.data.remote.search.NaverBookApiService
+import com.winteryy.readit.data.remote.search.SearchRepository
 import com.winteryy.readit.model.Book
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

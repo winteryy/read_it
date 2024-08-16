@@ -1,4 +1,4 @@
-package com.winteryy.readit.data.bookstorage
+package com.winteryy.readit.data.local.bookstorage
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

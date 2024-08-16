@@ -1,4 +1,4 @@
-package com.winteryy.readit.data.search
+package com.winteryy.readit.data.remote.search
 
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.model.Book

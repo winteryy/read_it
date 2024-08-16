@@ -2,7 +2,7 @@ package com.winteryy.readit.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.winteryy.readit.data.search.SearchRepository
+import com.winteryy.readit.data.remote.search.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

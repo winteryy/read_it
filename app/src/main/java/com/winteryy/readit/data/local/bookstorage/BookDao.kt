@@ -1,4 +1,4 @@
-package com.winteryy.readit.data.bookstorage
+package com.winteryy.readit.data.local.bookstorage
 
 import androidx.room.Dao
 import androidx.room.Delete

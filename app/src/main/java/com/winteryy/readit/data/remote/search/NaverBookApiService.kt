@@ -1,4 +1,4 @@
-package com.winteryy.readit.data.search
+package com.winteryy.readit.data.remote.search
 
 import retrofit2.http.GET
 import retrofit2.http.Query

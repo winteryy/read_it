@@ -1,14 +1,13 @@
 package com.winteryy.readit.data.di
 
 import com.google.gson.GsonBuilder
-import com.winteryy.readit.data.search.NaverBookApiService
+import com.winteryy.readit.data.remote.NaverBookInterceptor
+import com.winteryy.readit.data.remote.search.NaverBookApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -72,23 +71,5 @@ object RetrofitModule {
             .baseUrl(NAVER_BOOK_BASE_URL)
             .build()
             .create(NaverBookApiService::class.java)
-    }
-}
-
-object NaverBookInterceptor: Interceptor {
-    private const val HEADER_CLIENT_ID = "X-Naver-Client-Id"
-    private const val HEADER_CLIENT_SECRET = "X-Naver-Client-Secret"
-
-    private const val CLIENT_ID = "TuPaLltkU_JvpZjUeBOc"
-    private const val CLIENT_SECRET = "F8NO6n3zy5"
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val newRequest = chain.request()
-            .newBuilder()
-            .addHeader(HEADER_CLIENT_ID, CLIENT_ID)
-            .addHeader(HEADER_CLIENT_SECRET, CLIENT_SECRET)
-            .build()
-
-        return chain.proceed(newRequest)
     }
 }
