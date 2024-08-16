@@ -10,7 +10,8 @@ data class Book(
     val isbn: String,
     val description: String,
     val pubDate: Date,
-    val bookSaveStatus: BookSaveStatus = BookSaveStatus.NONE
+    val bookSaveStatus: BookSaveStatus = BookSaveStatus.NONE,
+    val saveDate: Date? = null
 )
 
 enum class BookSaveStatus {

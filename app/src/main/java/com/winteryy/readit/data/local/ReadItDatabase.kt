@@ -6,6 +6,6 @@ import com.winteryy.readit.data.local.bookstorage.BookDao
 import com.winteryy.readit.data.local.bookstorage.BookEntity
 
 @Database(entities = [BookEntity::class], version = 1)
-abstract class ReadItDatabase(): RoomDatabase() {
+abstract class ReadItDatabase: RoomDatabase() {
     abstract fun bookDao(): BookDao
 }
