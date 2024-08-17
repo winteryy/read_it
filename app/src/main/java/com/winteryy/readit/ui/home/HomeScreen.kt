@@ -52,7 +52,7 @@ fun HomeScreen(
         }
         Text(
             text = when(val result = testResult.value) {
-                is Result.Error -> "error"
+                is Result.Error -> result.exception.message.toString()
                 is Result.Success -> result.data.toString()
             }
         )

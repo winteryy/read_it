@@ -31,8 +31,8 @@ class BookStorageRepositoryImpl @Inject constructor(
                     publisher = book.publisher,
                     description = book.description,
                     pubDate = book.pubDate,
-                    bookSaveStatusNum = BookSaveStatusConverter.toNum(BookSaveStatus.WISH),
-                    savedDate = Date()
+                    savedDate = Date(),
+                    bookSaveStatus = BookSaveStatus.WISH
                 )
             )
 
@@ -53,8 +53,8 @@ class BookStorageRepositoryImpl @Inject constructor(
                     publisher = book.publisher,
                     description = book.description,
                     pubDate = book.pubDate,
-                    bookSaveStatusNum = BookSaveStatusConverter.toNum(BookSaveStatus.READING),
-                    savedDate = Date()
+                    savedDate = Date(),
+                    bookSaveStatus = BookSaveStatus.READING
                 )
             )
 
@@ -75,8 +75,8 @@ class BookStorageRepositoryImpl @Inject constructor(
                     publisher = book.publisher,
                     description = book.description,
                     pubDate = book.pubDate,
-                    bookSaveStatusNum = BookSaveStatusConverter.toNum(BookSaveStatus.RATED),
-                    savedDate = Date()
+                    savedDate = Date(),
+                    bookSaveStatus = BookSaveStatus.RATED
                 )
             )
 
