@@ -1,7 +1,9 @@
 package com.winteryy.readit.data.di
 
-import com.winteryy.readit.data.search.SearchRepository
-import com.winteryy.readit.data.search.impl.SearchRepositoryImpl
+import com.winteryy.readit.data.local.bookstorage.BookStorageRepository
+import com.winteryy.readit.data.local.bookstorage.impl.BookStorageRepositoryImpl
+import com.winteryy.readit.data.remote.search.SearchRepository
+import com.winteryy.readit.data.remote.search.impl.SearchRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +20,9 @@ abstract class RepositoryModule {
         searchRepositoryImpl: SearchRepositoryImpl
     ): SearchRepository
 
+    @Binds
+    @ViewModelScoped
+    abstract fun bindBookStorageRepository(
+        bookStorageRepositoryImpl: BookStorageRepositoryImpl
+    ): BookStorageRepository
 }
