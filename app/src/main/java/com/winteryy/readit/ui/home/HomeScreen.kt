@@ -3,6 +3,7 @@ package com.winteryy.readit.ui.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,6 +15,14 @@ import com.winteryy.readit.ui.theme.ReadItTheme
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel
+) {
+}
+
+
+
+@Composable
+fun HomeTestScreen(
     viewModel: HomeViewModel = viewModel()
 ) {
     val testResult = viewModel.testBookFlow.collectAsState()
@@ -51,7 +60,7 @@ fun HomeScreen(
             Text(text = "insert2")
         }
         Text(
-            text = when(val result = testResult.value) {
+            text = when (val result = testResult.value) {
                 is Result.Error -> result.exception.message.toString()
                 is Result.Success -> result.data.toString()
             }
@@ -65,7 +74,4 @@ fun HomeScreen(
 @Preview
 @Composable
 fun PreviewHomeScreen() {
-    ReadItTheme {
-        HomeScreen()
-    }
 }

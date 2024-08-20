@@ -20,7 +20,8 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = theme_color_dodgerBlue,
     secondary = theme_color_lightDodgerBlue,
-    tertiary = theme_color_malibu
+    tertiary = theme_color_malibu,
+    surface = theme_grey_whiteSmoke,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
