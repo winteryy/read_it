@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Read It</string>
 
-    <string name="search_place_holder">검색</string>>
+    <string name="test">테스트</string>
+
+    <string name="search_place_holder">검색</string>
 </resources>
