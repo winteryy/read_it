@@ -6,12 +6,10 @@ import com.winteryy.readit.data.local.bookstorage.BookEntity
 import com.winteryy.readit.data.local.bookstorage.BookStorageRepository
 import com.winteryy.readit.data.local.bookstorage.toBook
 import com.winteryy.readit.data.toException
-import com.winteryy.readit.data.util.BookSaveStatusConverter
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.BookSaveStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.util.Date
 import javax.inject.Inject
@@ -32,7 +30,8 @@ class BookStorageRepositoryImpl @Inject constructor(
                     description = book.description,
                     pubDate = book.pubDate,
                     savedDate = Date(),
-                    bookSaveStatus = BookSaveStatus.WISH
+                    bookSaveStatus = BookSaveStatus.WISH,
+                    rating = book.rating
                 )
             )
 
@@ -54,7 +53,8 @@ class BookStorageRepositoryImpl @Inject constructor(
                     description = book.description,
                     pubDate = book.pubDate,
                     savedDate = Date(),
-                    bookSaveStatus = BookSaveStatus.READING
+                    bookSaveStatus = BookSaveStatus.READING,
+                    rating = book.rating
                 )
             )
 
@@ -64,7 +64,7 @@ class BookStorageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setRatedBook(book: Book): Result<Unit> {
+    override suspend fun rateBook(book: Book, rating: Double): Result<Unit> {
         try {
             bookDao.insertBook(
                 BookEntity(
@@ -76,16 +76,15 @@ class BookStorageRepositoryImpl @Inject constructor(
                     description = book.description,
                     pubDate = book.pubDate,
                     savedDate = Date(),
-                    bookSaveStatus = BookSaveStatus.RATED
+                    bookSaveStatus = BookSaveStatus.NONE,
+                    rating = rating
                 )
             )
-
             return Result.Success(Unit)
         } catch (e: Exception) {
             return Result.Error(e)
         }
     }
-
 
     override fun getWishBooksFlow(): Flow<Result<List<Book>>> {
         return bookDao.getWishBooksFlow().map { entityList ->

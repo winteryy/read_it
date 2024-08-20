@@ -11,12 +11,12 @@ data class Book(
     val description: String,
     val pubDate: Date,
     val bookSaveStatus: BookSaveStatus = BookSaveStatus.NONE,
-    val saveDate: Date? = null
+    val saveDate: Date? = null,
+    val rating: Double = 0.0
 )
 
 enum class BookSaveStatus {
     NONE,
     WISH,
     READING,
-    RATED
 }

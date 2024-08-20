@@ -18,6 +18,7 @@ data class BookEntity(
     val pubDate: Date,
     val savedDate: Date,
     val bookSaveStatus: BookSaveStatus,
+    val rating: Double
 )
 
 fun BookEntity.toBook() = Book(
@@ -29,5 +30,6 @@ fun BookEntity.toBook() = Book(
     description = description,
     pubDate = pubDate,
     saveDate = savedDate,
-    bookSaveStatus = bookSaveStatus
+    bookSaveStatus = bookSaveStatus,
+    rating = rating
 )

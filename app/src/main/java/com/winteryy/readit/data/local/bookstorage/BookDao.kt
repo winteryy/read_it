@@ -17,7 +17,7 @@ interface BookDao {
     @Query("SELECT * FROM books WHERE bookSaveStatus='READING' ORDER BY savedDate DESC")
     fun getReadingBooksFlow(): Flow<List<BookEntity>>
 
-    @Query("SELECT * FROM books WHERE bookSaveStatus='RATED' ORDER BY savedDate DESC")
+    @Query("SELECT * FROM books WHERE rating>0.0 ORDER BY savedDate DESC")
     fun getRatedBooksFlow(): Flow<List<BookEntity>>
 
     @Query("DELETE FROM books WHERE isbn=:isbn")
