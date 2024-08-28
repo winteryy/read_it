@@ -7,10 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.winteryy.readit.ui.comment.CommentScreen
-import com.winteryy.readit.ui.home.HomeScreen
+import com.winteryy.readit.ui.home.HomeRoute
 import com.winteryy.readit.ui.mypage.MyPageScreen
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.winteryy.readit.ui.home.HomeViewModel
 
 @Composable
 fun ReadItNavGraph(
@@ -25,9 +23,7 @@ fun ReadItNavGraph(
     ) {
         composable(
             route = ReadItDestinations.HOME_ROUTE,
-        ) {
-            val viewModel = hiltViewModel<HomeViewModel>()
-            HomeScreen(viewModel) }
+        ) { HomeRoute() }
         composable(
             route = ReadItDestinations.COMMENT_ROUTE,
         ) { CommentScreen() }
