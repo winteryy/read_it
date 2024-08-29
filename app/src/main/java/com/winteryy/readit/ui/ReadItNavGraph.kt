@@ -23,7 +23,7 @@ fun ReadItNavGraph(
     ) {
         composable(
             route = ReadItDestinations.HOME_ROUTE,
-        ) { HomeRoute() }
+        ) { HomeRoute( emptyList() ) }
         composable(
             route = ReadItDestinations.COMMENT_ROUTE,
         ) { CommentScreen() }
