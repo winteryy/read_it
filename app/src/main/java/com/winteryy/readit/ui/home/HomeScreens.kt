@@ -23,12 +23,10 @@ fun HomeFeedScreen(
     modifier: Modifier = Modifier
 ) {
 
-    Column(modifier
-        .fillMaxSize()
+    Column(
+        modifier = modifier
+            .fillMaxSize()
     ) {
-        HomeSearchBar(Modifier.padding(16.dp))
-        HorizontalDivider()
-
         LazyColumn(
             modifier = Modifier
                 .padding(16.dp)

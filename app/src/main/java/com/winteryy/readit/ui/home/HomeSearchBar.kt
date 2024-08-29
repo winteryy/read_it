@@ -3,6 +3,8 @@ package com.winteryy.readit.ui.home
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -22,16 +28,30 @@ import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
 @Composable
 fun HomeSearchBar(
-    modifier: Modifier = Modifier
+    homeScreenType: HomeScreenType,
+    modifier: Modifier = Modifier,
 ) {
+
+    var searchText by rememberSaveable { mutableStateOf("") }
+
     TextField(
-        value = "",
-        onValueChange = {},
+        value = searchText,
+        onValueChange = { searchText = it },
         leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null
-            )
+            when(homeScreenType) {
+                HomeScreenType.FEED -> {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "search button"
+                    )
+                }
+                HomeScreenType.SEARCH, HomeScreenType.SEARCH_RESULT -> {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "back button"
+                    )
+                }
+            }
         },
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = theme_grey_whiteSmoke,
@@ -50,8 +70,20 @@ fun HomeSearchBar(
 
 @Preview
 @Composable
-fun PreviewHomeSearchBar() {
+fun FeedHomeSearchBarPreview() {
     ReadItTheme {
-        HomeSearchBar()
+        HomeSearchBar(
+            HomeScreenType.FEED
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SearchHomeSearchBarPreview() {
+    ReadItTheme {
+        HomeSearchBar(
+            HomeScreenType.SEARCH
+        )
     }
 }
