@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -21,7 +20,6 @@ import com.winteryy.readit.ui.theme.*
 
 @Composable
 fun HomeFeedScreen(
-    homeUiState: HomeUiState,
     modifier: Modifier = Modifier
 ) {
 
@@ -35,7 +33,6 @@ fun HomeFeedScreen(
             modifier = Modifier
                 .padding(16.dp)
         ) {
-            itemsIndexed()
         }
     }
 }
@@ -96,6 +93,6 @@ fun HomeTestScreen(
 @Composable
 fun PreviewHomeFeedScreen() {
     ReadItTheme {
-        HomeFeedScreen(homeUiState = object: HomeUiState{})
+        HomeFeedScreen()
     }
 }
