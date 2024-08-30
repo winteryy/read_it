@@ -1,41 +1,34 @@
 package com.winteryy.readit.ui.home
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.model.SectionType
 import com.winteryy.readit.ui.theme.ReadItTheme
 import java.util.Date
 
-enum class HomeScreenType {
-    FEED, SEARCH, SEARCH_RESULT
-}
-
 @Composable
 fun HomeRoute(
     sectionList: List<Section>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
 
-    var homeScreenType by rememberSaveable { mutableStateOf(HomeScreenType.FEED) }
-    var homeTopBarType by rememberSaveable { mutableStateOf(HomeTopBarType.SearchBar.Search) }
+    var homeScreenType by remember { mutableStateOf(HomeScreenType.FEED) }
+    var homeTopBarType by remember { mutableStateOf(HomeTopBarType.SearchBar.Search) }
 
     Column(
         modifier = modifier
     ) {
         HomeTopBar(
             homeTopBarType = homeTopBarType,
-            modifier = Modifier.padding(16.dp),
         )
         HorizontalDivider()
 
@@ -43,7 +36,6 @@ fun HomeRoute(
             HomeScreenType.FEED -> {
                 HomeFeedScreen(
                     sectionList = sectionList,
-                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
             HomeScreenType.SEARCH -> TODO()
@@ -162,9 +154,9 @@ fun HomeRoutePreview() {
     )
     ReadItTheme {
         HomeRoute(
-            listOf(
+            sectionList = listOf(
                 dummySection, dummySection, dummySection, dummySection
-            )
+            ),
         )
     }
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.R
@@ -50,7 +52,8 @@ fun HomeTopBar(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = modifier
                     .fillMaxWidth()
-                    .heightIn(min = 56.dp)
+                    .padding(16.dp)
+                    .heightIn(min = 40.dp)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -59,7 +62,9 @@ fun HomeTopBar(
                 Spacer(modifier = Modifier.size(16.dp))
                 Text(
                     text = homeTopBarType.title,
-                    style = Typography.headlineSmall
+                    style = Typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Bold
+                    )
                 )
             }
         }
@@ -94,6 +99,7 @@ fun HomeTopBar(
                 },
                 modifier = modifier
                     .fillMaxWidth()
+                    .padding(16.dp)
                     .heightIn(min = 56.dp)
             )
         }

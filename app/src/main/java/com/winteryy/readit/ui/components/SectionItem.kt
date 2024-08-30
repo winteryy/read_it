@@ -33,7 +33,7 @@ import java.util.Date
 fun SectionItem(
     section: Section,
     modifier: Modifier = Modifier,
-    onArrowClicked: (SectionType) -> Unit = {},
+    onArrowClicked: (Section) -> Unit = {},
     onItemClicked: (Book) -> Unit = {}
 ) {
     Column(modifier) {
@@ -63,7 +63,10 @@ fun SectionItem(
                 key = { _, book -> book.isbn }
             ) { ind, book ->
                 if(ind!=0) Spacer(modifier = Modifier.size(8.dp))
-                BookItem(book = book)
+                BookItem(
+                    book = book,
+                    onClick = onItemClicked
+                )
             }
         }
     }

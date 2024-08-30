@@ -1,14 +1,13 @@
 package com.winteryy.readit.ui.components
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,48 +20,61 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.ui.theme.ReadItTheme
+import com.winteryy.readit.ui.theme.Typography
+import com.winteryy.readit.ui.theme.theme_grey_gunPowder
+import com.winteryy.readit.ui.util.getYearByCalender
 import java.util.Date
 
-private val BOOK_WIDTH = 140.dp
+private val BOOK_HEIGHT = 150.dp
 
 @Composable
-fun BookItem(
+fun BookItemRow(
     book: Book,
-    modifier: Modifier = Modifier,
-    onClick: (Book) -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
-    Column(
+    Row(
         modifier = modifier
-            .width(BOOK_WIDTH)
-            .clickable { onClick(book) }
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         AsyncImage(
             model = book.image,
             contentDescription = book.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(BOOK_WIDTH, 210.dp)
+                .size(100.dp, BOOK_HEIGHT)
                 .clip(RoundedCornerShape(10.dp))
         )
-        Spacer(modifier = Modifier.size(4.dp))
-        Text(
-            text = book.title,
+        Column(
             modifier = Modifier
-                .fillMaxWidth(),
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
-            minLines = 2,
-            maxLines = 2,
-        )
+                .fillMaxWidth()
+                .height(BOOK_HEIGHT)
+                .padding(start = 8.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = book.title,
+                style = Typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 2
+            )
+            Text(
+                text = book.author,
+                style = Typography.bodyMedium
+            )
+            Text(
+                text = book.pubDate.getYearByCalender().toString() + " · " + book.publisher,
+                style = Typography.bodyMedium.copy(color = theme_grey_gunPowder)
+            )
+        }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun PreviewBookItem() {
+fun BookItemRowPreview() {
     ReadItTheme {
-        BookItem(
+        BookItemRow(
             book = Book(
                 "정의란 무엇인가",
                 "https://picsum.photos/300/400",
@@ -71,7 +83,7 @@ fun PreviewBookItem() {
                 "1321412",
                 description = "asdasd",
                 pubDate = Date(),
-                )
             )
+        )
     }
 }
