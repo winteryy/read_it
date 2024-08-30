@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,12 +31,14 @@ private val BOOK_HEIGHT = 150.dp
 @Composable
 fun BookItemRow(
     book: Book,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (Book) -> Unit = {}
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .clickable { onClick(book) }
     ) {
         AsyncImage(
             model = book.image,
