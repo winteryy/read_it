@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,8 +34,8 @@ import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 sealed interface HomeTopBarType {
     data class TextBar(val title: String): HomeTopBarType
     sealed interface SearchBar: HomeTopBarType {
-        object Search: SearchBar
-        object SearchResult: SearchBar
+        object Default: SearchBar
+        object Searching: SearchBar
     }
 }
 
@@ -42,6 +43,7 @@ sealed interface HomeTopBarType {
 fun HomeTopBar(
     homeTopBarType: HomeTopBarType,
     modifier: Modifier = Modifier,
+    onBackArrowClicked: () -> Unit = {},
 ) {
 
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -57,7 +59,8 @@ fun HomeTopBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "back button"
+                    contentDescription = "back button",
+                    modifier = Modifier.clickable { onBackArrowClicked() }
                 )
                 Spacer(modifier = Modifier.size(16.dp))
                 Text(
@@ -74,16 +77,17 @@ fun HomeTopBar(
                 onValueChange = { searchText = it },
                 leadingIcon = {
                     when(homeTopBarType) {
-                        is HomeTopBarType.SearchBar.Search-> {
+                        is HomeTopBarType.SearchBar.Default-> {
                             Icon(
                                 imageVector = Icons.Filled.Search,
-                                contentDescription = "search button"
+                                contentDescription = "icon leading to search text field"
                             )
                         }
-                        is HomeTopBarType.SearchBar.SearchResult -> {
+                        is HomeTopBarType.SearchBar.Searching -> {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "back button"
+                                contentDescription = "back button",
+                                modifier = Modifier.clickable { onBackArrowClicked() }
                             )
                         }
                     }
@@ -105,7 +109,6 @@ fun HomeTopBar(
         }
     }
 
-
 }
 
 @Preview(showBackground = true)
@@ -123,7 +126,7 @@ fun ListHomeTopBarPreview() {
 fun FeedHomeTopBarPreview() {
     ReadItTheme {
         HomeTopBar(
-            HomeTopBarType.SearchBar.Search,
+            HomeTopBarType.SearchBar.Default,
         )
     }
 }
@@ -133,7 +136,7 @@ fun FeedHomeTopBarPreview() {
 fun SearchHomeTopBarPreview() {
     ReadItTheme {
         HomeTopBar(
-            HomeTopBarType.SearchBar.SearchResult,
+            HomeTopBarType.SearchBar.Searching,
         )
     }
 }

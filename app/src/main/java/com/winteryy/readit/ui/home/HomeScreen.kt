@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
+import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.SectionItem
 import com.winteryy.readit.ui.theme.ReadItTheme
 
@@ -44,10 +46,27 @@ fun HomeFeedScreen(
 }
 
 @Composable
-fun HomeSearchResultScreen(
+fun HomeSearchScreen(
     modifier: Modifier = Modifier
 ) {
 
+}
+
+@Composable
+fun HomeSearchResultScreen(
+    bookList: List<Book>,
+    modifier: Modifier = Modifier,
+    onResultItemClicked: (Book) -> Unit = {}
+) {
+    val lazyListState = rememberLazyListState()
+
+    BookListColumn(
+        bookList = bookList,
+        lazyListState = lazyListState,
+        modifier = modifier
+            .padding(horizontal = 16.dp),
+        onItemClicked = onResultItemClicked
+    )
 }
 
 @Preview(showBackground = true)

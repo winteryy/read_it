@@ -17,7 +17,7 @@ fun BookListColumn(
     bookList: List<Book>,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
-    onItemClicked: (Book) -> Unit
+    onItemClicked: (Book) -> Unit = {}
 ) {
     LazyColumn(
         state = lazyListState,

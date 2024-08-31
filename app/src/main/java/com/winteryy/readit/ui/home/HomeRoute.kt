@@ -22,7 +22,7 @@ fun HomeRoute(
 ) {
 
     var homeScreenType by remember { mutableStateOf(HomeScreenType.FEED) }
-    var homeTopBarType by remember { mutableStateOf(HomeTopBarType.SearchBar.Search) }
+    var homeTopBarType by remember { mutableStateOf(HomeTopBarType.SearchBar.Default) }
 
     Column(
         modifier = modifier
@@ -38,8 +38,14 @@ fun HomeRoute(
                     sectionList = sectionList,
                 )
             }
-            HomeScreenType.SEARCH -> TODO()
-            HomeScreenType.SEARCH_RESULT -> TODO()
+            HomeScreenType.SEARCH -> {
+                HomeSearchScreen()
+            }
+            HomeScreenType.SEARCH_RESULT -> {
+                HomeSearchResultScreen(
+                    bookList = emptyList()
+                )
+            }
         }
     }
 
