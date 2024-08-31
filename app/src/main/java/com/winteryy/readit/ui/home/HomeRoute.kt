@@ -1,12 +1,9 @@
 package com.winteryy.readit.ui.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.winteryy.readit.model.Book
@@ -17,33 +14,37 @@ import java.util.Date
 
 @Composable
 fun HomeRoute(
-    sectionList: List<Section>,
+//    homeViewModel: HomeViewModel,
+    homeUiState: HomeUiState,
     modifier: Modifier = Modifier,
 ) {
-
-    var homeScreenType by remember { mutableStateOf(HomeScreenType.FEED) }
-    var homeTopBarType by remember { mutableStateOf(HomeTopBarType.SearchBar.Default) }
+    //val homeUiState by homeViewModel...
+    val sectionLazyListState = rememberLazyListState()
 
     Column(
         modifier = modifier
     ) {
         HomeTopBar(
-            homeTopBarType = homeTopBarType,
+            homeTopBarType = when(homeUiState) {
+                is HomeUiState.FeedState -> HomeTopBarType.SearchBar.Default
+                is HomeUiState.SearchState -> HomeTopBarType.SearchBar.Searching
+                is HomeUiState.SearchResultState -> HomeTopBarType.SearchBar.Searching
+            },
         )
+
         HorizontalDivider()
 
-        when(homeScreenType) {
-            HomeScreenType.FEED -> {
+        when(homeUiState) {
+            is HomeUiState.FeedState -> {
                 HomeFeedScreen(
-                    sectionList = sectionList,
+                    sectionList = homeUiState.sectionList,
+                    sectionLazyListState = sectionLazyListState
                 )
             }
-            HomeScreenType.SEARCH -> {
-                HomeSearchScreen()
-            }
-            HomeScreenType.SEARCH_RESULT -> {
+            is HomeUiState.SearchState -> HomeSearchScreen()
+            is HomeUiState.SearchResultState -> {
                 HomeSearchResultScreen(
-                    bookList = emptyList()
+                    bookList = homeUiState.bookList
                 )
             }
         }
@@ -160,9 +161,11 @@ fun HomeRoutePreview() {
     )
     ReadItTheme {
         HomeRoute(
-            sectionList = listOf(
-                dummySection, dummySection, dummySection, dummySection
-            ),
+            HomeUiState.FeedState(
+                sectionList = listOf(
+                    dummySection, dummySection, dummySection, dummySection
+                )
+            )
         )
     }
 }

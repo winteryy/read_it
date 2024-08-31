@@ -1,4 +1,19 @@
 package com.winteryy.readit.ui.home
 
-interface HomeUiState {
+import com.winteryy.readit.model.Book
+import com.winteryy.readit.model.Section
+
+sealed interface HomeUiState {
+
+    data class FeedState(
+        val sectionList: List<Section>
+    ): HomeUiState
+
+    data class SearchState(
+        val logList: List<String> = emptyList()
+    ): HomeUiState
+
+    data class SearchResultState(
+        val bookList: List<Book>
+    ): HomeUiState
 }

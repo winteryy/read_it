@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -16,18 +17,16 @@ import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.SectionItem
 import com.winteryy.readit.ui.theme.ReadItTheme
 
-enum class HomeScreenType {
-    FEED, SEARCH, SEARCH_RESULT
-}
-
 @Composable
 fun HomeFeedScreen(
     sectionList: List<Section>,
     modifier: Modifier = Modifier,
     onSectionArrowClicked: (Section) -> Unit = {},
-    onSectionItemClicked: (Book) -> Unit = {}
+    onSectionItemClicked: (Book) -> Unit = {},
+    sectionLazyListState: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
+        state = sectionLazyListState,
         modifier = modifier
             .padding(horizontal = 16.dp)
     ) {
