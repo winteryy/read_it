@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.winteryy.readit.ui.comment.CommentScreen
 import com.winteryy.readit.ui.home.HomeRoute
+import com.winteryy.readit.ui.home.HomeUiState
 import com.winteryy.readit.ui.mypage.MyPageScreen
 
 @Composable
@@ -23,7 +24,7 @@ fun ReadItNavGraph(
     ) {
         composable(
             route = ReadItDestinations.HOME_ROUTE,
-        ) { HomeRoute( emptyList() ) }
+        ) { HomeRoute() }
         composable(
             route = ReadItDestinations.COMMENT_ROUTE,
         ) { CommentScreen() }

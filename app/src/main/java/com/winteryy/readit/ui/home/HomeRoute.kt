@@ -6,6 +6,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.model.SectionType
@@ -14,42 +16,45 @@ import java.util.Date
 
 @Composable
 fun HomeRoute(
-//    homeViewModel: HomeViewModel,
-    homeUiState: HomeUiState,
     modifier: Modifier = Modifier,
 ) {
-    //val homeUiState by homeViewModel...
+    val homeViewModel: HomeViewModel = hiltViewModel()
     val sectionLazyListState = rememberLazyListState()
+    val homeUiState = homeViewModel.homeUiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = modifier
     ) {
-        HomeTopBar(
-            homeTopBarType = when(homeUiState) {
-                is HomeUiState.FeedState -> HomeTopBarType.SearchBar.Default
-                is HomeUiState.SearchState -> HomeTopBarType.SearchBar.Searching
-                is HomeUiState.SearchResultState -> HomeTopBarType.SearchBar.Searching
-            },
-        )
 
-        HorizontalDivider()
+        homeUiState.value.let { curState ->
 
-        when(homeUiState) {
-            is HomeUiState.FeedState -> {
-                HomeFeedScreen(
-                    sectionList = homeUiState.sectionList,
-                    sectionLazyListState = sectionLazyListState
-                )
-            }
-            is HomeUiState.SearchState -> HomeSearchScreen()
-            is HomeUiState.SearchResultState -> {
-                HomeSearchResultScreen(
-                    bookList = homeUiState.bookList
-                )
+            HomeTopBar(
+                homeTopBarType = when(curState) {
+                    is HomeUiState.FeedState -> HomeTopBarType.SearchBar.Default
+                    is HomeUiState.SearchState -> HomeTopBarType.SearchBar.Searching
+                    is HomeUiState.SearchResultState -> HomeTopBarType.SearchBar.Searching
+                },
+            )
+
+            HorizontalDivider()
+
+            when(curState) {
+                is HomeUiState.FeedState -> {
+                    HomeFeedScreen(
+                        sectionList = curState.sectionList,
+                        sectionLazyListState = sectionLazyListState
+                    )
+                }
+                is HomeUiState.SearchState -> HomeSearchScreen()
+                is HomeUiState.SearchResultState -> {
+                    HomeSearchResultScreen(
+                        bookList = curState.bookList
+                    )
+                }
             }
         }
-    }
 
+    }
 }
 
 @Preview(showBackground = true)
@@ -161,11 +166,11 @@ fun HomeRoutePreview() {
     )
     ReadItTheme {
         HomeRoute(
-            HomeUiState.FeedState(
-                sectionList = listOf(
-                    dummySection, dummySection, dummySection, dummySection
-                )
-            )
+//            HomeUiState.FeedState(
+//                sectionList = listOf(
+//                    dummySection, dummySection, dummySection, dummySection
+//                )
+//            )
         )
     }
 }
