@@ -67,7 +67,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun clearFeedScreen() {
+    fun setSearchingScreen() {
+        clearFeedScreen()
+
+        _homeUiState.update {
+            HomeUiState.SearchState()
+        }
+    }
+
+    private fun clearFeedScreen() {
         feedJob?.cancel()
         feedJob = null
     }
