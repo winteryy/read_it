@@ -98,4 +98,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun setSectionDetailScreen(section: Section) {
+        _homeUiState.update {
+            HomeUiState.SectionDetailState(section)
+        }
+    }
+
 }

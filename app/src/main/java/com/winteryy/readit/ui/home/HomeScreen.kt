@@ -75,6 +75,24 @@ fun HomeSearchResultScreen(
     )
 }
 
+@Composable
+fun HomeSectionDetailScreen(
+    bookList: List<Book>,
+    modifier: Modifier = Modifier,
+    onBookItemClicked: (Book) -> Unit = {}
+) {
+    val lazyListState = rememberLazyListState()
+
+    BookListColumn(
+        bookList = bookList,
+        lazyListState = lazyListState,
+        modifier = modifier
+            .padding(horizontal = 16.dp),
+        onItemClicked = onBookItemClicked
+
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewHomeFeedScreen() {

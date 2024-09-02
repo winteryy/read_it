@@ -32,6 +32,9 @@ fun HomeRoute(
                     is HomeUiState.FeedState -> HomeTopBarType.SearchBar.Default
                     is HomeUiState.SearchState -> HomeTopBarType.SearchBar.Searching
                     is HomeUiState.SearchResultState -> HomeTopBarType.SearchBar.Searching
+                    is HomeUiState.SectionDetailState -> HomeTopBarType.TextBar(
+                        title = curState.section.sectionType.title
+                    )
                 },
                 onTextInputTriggered = { homeViewModel.setSearchingScreen() },
                 onBackArrowClicked = { homeViewModel.setFeedScreen() },
@@ -46,7 +49,8 @@ fun HomeRoute(
                 is HomeUiState.FeedState -> {
                     HomeFeedScreen(
                         sectionList = curState.sectionList,
-                        sectionLazyListState = sectionLazyListState
+                        sectionLazyListState = sectionLazyListState,
+                        onSectionArrowClicked = { homeViewModel.setSectionDetailScreen(it) }
                     )
                 }
                 is HomeUiState.SearchState -> HomeSearchScreen()
@@ -56,6 +60,9 @@ fun HomeRoute(
                         bookList = curState.bookList
                     )
                 }
+                is HomeUiState.SectionDetailState -> HomeSectionDetailScreen(
+                    bookList = curState.section.bookList
+                )
             }
         }
 
