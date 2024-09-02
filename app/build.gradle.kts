@@ -59,8 +59,9 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    //ViewModel
+    //lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
 
     implementation(libs.androidx.activity.compose)
@@ -89,6 +90,10 @@ dependencies {
     //Hilt
     implementation (libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+
+    //Coil
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
 

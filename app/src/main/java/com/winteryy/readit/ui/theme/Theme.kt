@@ -1,6 +1,5 @@
 package com.winteryy.readit.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +19,8 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = theme_color_dodgerBlue,
     secondary = theme_color_lightDodgerBlue,
-    tertiary = theme_color_malibu
+    tertiary = theme_color_malibu,
+    surface = theme_grey_gunPowder,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),

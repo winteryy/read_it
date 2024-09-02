@@ -1,71 +1,104 @@
 package com.winteryy.readit.ui.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.winteryy.readit.data.Result
+import androidx.compose.ui.unit.dp
+import com.winteryy.readit.model.Book
+import com.winteryy.readit.model.Section
+import com.winteryy.readit.ui.components.BookListColumn
+import com.winteryy.readit.ui.components.SectionItem
 import com.winteryy.readit.ui.theme.ReadItTheme
 
 @Composable
-fun HomeScreen(
-    viewModel: HomeViewModel = viewModel()
+fun HomeFeedScreen(
+    sectionList: List<Section>,
+    modifier: Modifier = Modifier,
+    onSectionArrowClicked: (Section) -> Unit = {},
+    onSectionItemClicked: (Book) -> Unit = {},
+    sectionLazyListState: LazyListState = rememberLazyListState()
 ) {
-    val testResult = viewModel.testBookFlow.collectAsState()
-
-    Column {
-        Text(text = "Home")
-        Button(
-            onClick = {
-                //viewModel.repoTest()
-            },
-            colors = ButtonDefaults.buttonColors().copy(
-                containerColor = Color.DarkGray
+    LazyColumn(
+        state = sectionLazyListState,
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+    ) {
+        itemsIndexed(
+            items = sectionList,
+            key = { _, section -> section.sectionType.id }
+        ) { ind, section ->
+            Spacer(modifier = Modifier.size(16.dp))
+            SectionItem(
+                section = section,
+                onArrowClicked = onSectionArrowClicked,
+                onItemClicked = onSectionItemClicked
             )
-        ) {
-            Text(text = "search test button")
+            Spacer(modifier = Modifier.size(16.dp))
         }
-        Button(
-            onClick = {
-                viewModel.insertBookTest1()
-            },
-            colors = ButtonDefaults.buttonColors().copy(
-                containerColor = Color.DarkGray
-            )
-        ) {
-            Text(text = "insert1")
-        }
-        Button(
-            onClick = {
-                viewModel.insertBookTest2()
-            },
-            colors = ButtonDefaults.buttonColors().copy(
-                containerColor = Color.DarkGray
-            )
-        ) {
-            Text(text = "insert2")
-        }
-        Text(
-            text = when(val result = testResult.value) {
-                is Result.Error -> result.exception.message.toString()
-                is Result.Success -> result.data.toString()
-            }
-        )
-
     }
+}
 
+@Composable
+fun HomeSearchScreen(
+    modifier: Modifier = Modifier
+) {
 
 }
 
-@Preview
 @Composable
-fun PreviewHomeScreen() {
+fun HomeSearchResultScreen(
+    query: String,
+    bookList: List<Book>,
+    modifier: Modifier = Modifier,
+    onResultItemClicked: (Book) -> Unit = {}
+) {
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(query) {
+        lazyListState.scrollToItem(0)
+    }
+
+    BookListColumn(
+        bookList = bookList,
+        lazyListState = lazyListState,
+        modifier = modifier
+            .padding(horizontal = 16.dp),
+        onItemClicked = onResultItemClicked
+    )
+}
+
+@Composable
+fun HomeSectionDetailScreen(
+    bookList: List<Book>,
+    modifier: Modifier = Modifier,
+    onBookItemClicked: (Book) -> Unit = {}
+) {
+    val lazyListState = rememberLazyListState()
+
+    BookListColumn(
+        bookList = bookList,
+        lazyListState = lazyListState,
+        modifier = modifier
+            .padding(horizontal = 16.dp),
+        onItemClicked = onBookItemClicked
+
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewHomeFeedScreen() {
     ReadItTheme {
-        HomeScreen()
+        HomeFeedScreen(
+            emptyList()
+        )
     }
 }
