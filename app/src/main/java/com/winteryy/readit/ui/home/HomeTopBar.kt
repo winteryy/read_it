@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -25,6 +27,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.R
@@ -33,10 +36,10 @@ import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
 sealed interface HomeTopBarType {
-    data class TextBar(val title: String): HomeTopBarType
-    sealed interface SearchBar: HomeTopBarType {
-        object Default: SearchBar
-        object Searching: SearchBar
+    data class TextBar(val title: String) : HomeTopBarType
+    sealed interface SearchBar : HomeTopBarType {
+        object Default : SearchBar
+        object Searching : SearchBar
     }
 }
 
@@ -44,6 +47,7 @@ sealed interface HomeTopBarType {
 fun HomeTopBar(
     homeTopBarType: HomeTopBarType,
     modifier: Modifier = Modifier,
+    onSearch: (String) -> Unit = {},
     onTextInputTriggered: () -> Unit = {},
     onBackArrowClicked: () -> Unit = {},
 ) {
@@ -52,7 +56,7 @@ fun HomeTopBar(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    when(homeTopBarType) {
+    when (homeTopBarType) {
         is HomeTopBarType.TextBar -> {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -75,18 +79,20 @@ fun HomeTopBar(
                 )
             }
         }
+
         is HomeTopBarType.SearchBar -> {
             TextField(
                 value = textState.value,
                 onValueChange = { textState.value = it },
                 leadingIcon = {
-                    when(homeTopBarType) {
-                        is HomeTopBarType.SearchBar.Default-> {
+                    when (homeTopBarType) {
+                        is HomeTopBarType.SearchBar.Default -> {
                             Icon(
                                 imageVector = Icons.Filled.Search,
                                 contentDescription = "icon leading to search text field"
                             )
                         }
+
                         is HomeTopBarType.SearchBar.Searching -> {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -116,7 +122,18 @@ fun HomeTopBar(
                     .heightIn(min = 56.dp)
                     .onFocusChanged { focusState ->
                         if (focusState.isFocused) onTextInputTriggered()
+                    },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboardController?.hide()
+                        focusManager.clearFocus()
+                        onSearch(textState.value)
                     }
+                ),
+                singleLine = true,
             )
         }
     }

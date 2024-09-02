@@ -35,7 +35,8 @@ fun HomeRoute(
                     is HomeUiState.SearchResultState -> HomeTopBarType.SearchBar.Searching
                 },
                 onTextInputTriggered = { homeViewModel.setSearchingScreen() },
-                onBackArrowClicked = { homeViewModel.setFeedScreen() }
+                onBackArrowClicked = { homeViewModel.setFeedScreen() },
+                onSearch = { homeViewModel.setSearchResultScreen(it) }
             )
 
             HorizontalDivider()

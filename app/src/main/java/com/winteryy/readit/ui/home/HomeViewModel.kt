@@ -79,4 +79,18 @@ class HomeViewModel @Inject constructor(
         feedJob?.cancel()
         feedJob = null
     }
+
+    fun setSearchResultScreen(query: String) = viewModelScope.launch {
+        when(val result = searchRepository.searchBooks(query)) {
+            is Result.Error -> {
+                //todo 에러 핸들링
+            }
+            is Result.Success -> {
+                _homeUiState.update {
+                    HomeUiState.SearchResultState(result.data)
+                }
+            }
+        }
+    }
+
 }
