@@ -70,8 +70,10 @@ class HomeViewModel @Inject constructor(
     fun setSearchingScreen() {
         clearFeedScreen()
 
-        _homeUiState.update {
-            HomeUiState.SearchState()
+        if(homeUiState.value !is HomeUiState.SearchResultState) {
+            _homeUiState.update {
+                HomeUiState.SearchState()
+            }
         }
     }
 
@@ -87,7 +89,10 @@ class HomeViewModel @Inject constructor(
             }
             is Result.Success -> {
                 _homeUiState.update {
-                    HomeUiState.SearchResultState(result.data)
+                    HomeUiState.SearchResultState(
+                        query,
+                        result.data
+                    )
                 }
             }
         }

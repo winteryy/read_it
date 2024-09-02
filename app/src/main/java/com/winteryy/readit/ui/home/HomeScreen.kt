@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,13 +33,14 @@ fun HomeFeedScreen(
     ) {
         itemsIndexed(
             items = sectionList,
-            key = { ind, section -> ind } //todo section 고유 값으로 수정할 것
+            key = { _, section -> section.sectionType.id }
         ) { ind, section ->
             Spacer(modifier = Modifier.size(16.dp))
             SectionItem(
                 section = section,
                 onArrowClicked = onSectionArrowClicked,
-                onItemClicked = onSectionItemClicked)
+                onItemClicked = onSectionItemClicked
+            )
             Spacer(modifier = Modifier.size(16.dp))
         }
     }
@@ -53,11 +55,16 @@ fun HomeSearchScreen(
 
 @Composable
 fun HomeSearchResultScreen(
+    query: String,
     bookList: List<Book>,
     modifier: Modifier = Modifier,
     onResultItemClicked: (Book) -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(query) {
+        lazyListState.scrollToItem(0)
+    }
 
     BookListColumn(
         bookList = bookList,

@@ -14,6 +14,7 @@ sealed interface HomeUiState {
     ): HomeUiState
 
     data class SearchResultState(
+        val query: String,
         val bookList: List<Book>
     ): HomeUiState
 }

@@ -27,7 +27,6 @@ fun HomeRoute(
     ) {
 
         homeUiState.value.let { curState ->
-
             HomeTopBar(
                 homeTopBarType = when(curState) {
                     is HomeUiState.FeedState -> HomeTopBarType.SearchBar.Default
@@ -36,7 +35,9 @@ fun HomeRoute(
                 },
                 onTextInputTriggered = { homeViewModel.setSearchingScreen() },
                 onBackArrowClicked = { homeViewModel.setFeedScreen() },
-                onSearch = { homeViewModel.setSearchResultScreen(it) }
+                onSearch = {
+                    homeViewModel.setSearchResultScreen(it)
+                }
             )
 
             HorizontalDivider()
@@ -51,6 +52,7 @@ fun HomeRoute(
                 is HomeUiState.SearchState -> HomeSearchScreen()
                 is HomeUiState.SearchResultState -> {
                     HomeSearchResultScreen(
+                        query = curState.query,
                         bookList = curState.bookList
                     )
                 }
