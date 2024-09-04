@@ -64,7 +64,7 @@ class BookStorageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun rateBook(book: Book, rating: Double): Result<Unit> {
+    override suspend fun rateBook(book: Book, rating: Float): Result<Unit> {
         try {
             bookDao.insertBook(
                 BookEntity(

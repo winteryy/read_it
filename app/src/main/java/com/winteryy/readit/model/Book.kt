@@ -12,7 +12,7 @@ data class Book(
     val pubDate: Date,
     val bookSaveStatus: BookSaveStatus = BookSaveStatus.NONE,
     val saveDate: Date? = null,
-    val rating: Double = 0.0
+    val rating: Float = 0.0F
 )
 
 enum class BookSaveStatus {
