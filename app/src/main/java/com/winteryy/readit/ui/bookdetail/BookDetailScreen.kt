@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.model.Book
+import com.winteryy.readit.model.BookSaveStatus
 import com.winteryy.readit.ui.components.BookItemRow
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.theme.ReadItTheme
@@ -42,8 +43,11 @@ fun BookDetailScreen(
         ) {
             BookItemRow(book = book)
             Spacer(modifier = Modifier.size(8.dp))
-            BookItemRow(book = book)
-            Spacer(modifier = Modifier.size(8.dp))
+            BookActionPanel(
+                2.5f,
+                BookSaveStatus.WISH,
+                false
+            )
 
         }
 

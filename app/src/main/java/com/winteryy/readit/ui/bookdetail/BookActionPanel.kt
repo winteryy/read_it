@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui.bookdetail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -26,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.winteryy.readit.R
 import com.winteryy.readit.model.BookSaveStatus
 import com.winteryy.readit.ui.components.RatingBar
+import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.theme_color_malibu
 import com.winteryy.readit.ui.theme.theme_grey_black
@@ -47,54 +50,61 @@ fun BookActionPanel(
     onCommentButtonClicked: (Boolean) -> Unit = {},
     onReadingButtonClicked: (Boolean) -> Unit = {}
 ) {
-    Column(
+    Surface(
         modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        color = Color.White
     ) {
-        RatingBar(
-            rating = rating,
-            onRatingChanged = onRatingChanged,
+        Column(
             modifier = Modifier
-                .padding(vertical = 16.dp)
-        )
-        HorizontalDivider(
-            thickness = 0.5.dp
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+                .padding(horizontal = DEFAULT_PADDING),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            PanelItem(
-                panelItemResource = PanelItemResource(
-                    title = stringResource(R.string.wish_button_title),
-                    defaultIcon = Icons.Filled.Add,
-                    checkedIcon = Icons.Filled.Done,
-                ),
-                isChecked = bookSaveStatus == BookSaveStatus.WISH,
-                onClicked = onWishButtonClicked
+            RatingBar(
+                rating = rating,
+                onRatingChanged = onRatingChanged,
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
             )
-            PanelItem(
-                panelItemResource = PanelItemResource(
-                    title = stringResource(R.string.comment_button_title),
-                    defaultIcon = Icons.Filled.Create,
-                    checkedIcon = Icons.Filled.Create,
-                ),
-                isChecked = hasComment,
-                onClicked = onCommentButtonClicked
+            HorizontalDivider(
+                thickness = 0.5.dp
             )
-            PanelItem(
-                panelItemResource = PanelItemResource(
-                    title = stringResource(R.string.reading_button_title),
-                    defaultIcon = ImageVector.vectorResource(id = R.drawable.baseline_visibility_off_24),
-                    checkedIcon = ImageVector.vectorResource(id = R.drawable.baseline_visibility_24),
-                ),
-                isChecked = bookSaveStatus == BookSaveStatus.READING,
-                onClicked = onReadingButtonClicked
-            )
-        }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                PanelItem(
+                    panelItemResource = PanelItemResource(
+                        title = stringResource(R.string.wish_button_title),
+                        defaultIcon = Icons.Filled.Add,
+                        checkedIcon = Icons.Filled.Done,
+                    ),
+                    isChecked = bookSaveStatus == BookSaveStatus.WISH,
+                    onClicked = onWishButtonClicked
+                )
+                PanelItem(
+                    panelItemResource = PanelItemResource(
+                        title = stringResource(R.string.comment_button_title),
+                        defaultIcon = Icons.Filled.Create,
+                        checkedIcon = Icons.Filled.Create,
+                    ),
+                    isChecked = hasComment,
+                    onClicked = onCommentButtonClicked
+                )
+                PanelItem(
+                    panelItemResource = PanelItemResource(
+                        title = stringResource(R.string.reading_button_title),
+                        defaultIcon = ImageVector.vectorResource(id = R.drawable.baseline_visibility_off_24),
+                        checkedIcon = ImageVector.vectorResource(id = R.drawable.baseline_visibility_24),
+                    ),
+                    isChecked = bookSaveStatus == BookSaveStatus.READING,
+                    onClicked = onReadingButtonClicked
+                )
+            }
 
+        }
     }
+
 }
 
 @Composable
@@ -109,7 +119,8 @@ fun PanelItem(
             .size(120.dp, 80.dp)
             .clickable {
                 onClicked(isChecked)
-            }
+            },
+        color = Color.White
     ) {
         Column(
             modifier = Modifier,
@@ -143,7 +154,7 @@ fun PanelItem(
 }
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFF00FF)
 fun BookActionPanelPreview() {
     ReadItTheme {
         BookActionPanel(
