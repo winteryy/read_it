@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.R
 import com.winteryy.readit.ui.components.TextTopBar
+import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
@@ -97,7 +98,7 @@ fun HomeTopBar(
                 },
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(DEFAULT_PADDING)
                     .heightIn(min = 56.dp)
                     .onFocusChanged { focusState ->
                         if (focusState.isFocused) onTextInputTriggered()

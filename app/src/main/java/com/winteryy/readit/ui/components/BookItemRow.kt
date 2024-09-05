@@ -1,6 +1,5 @@
 package com.winteryy.readit.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.winteryy.readit.model.Book
+import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_grey_gunPowder
@@ -44,7 +44,7 @@ fun BookItemRow(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(DEFAULT_PADDING)
                 .clickable { onClick(book) }
         ) {
             AsyncImage(
