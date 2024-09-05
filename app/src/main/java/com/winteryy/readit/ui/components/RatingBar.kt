@@ -62,7 +62,7 @@ fun RatingBar(
         for(ind in 1..5) {
             Box(
                 modifier = Modifier
-                    .size(72.dp)
+                    .size(58.dp)
                     .onGloballyPositioned { layoutCoordinates ->
                         bounds[ind] = layoutCoordinates.boundsInParent()
                     }

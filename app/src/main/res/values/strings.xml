@@ -4,4 +4,7 @@
     <string name="test">테스트</string>
 
     <string name="search_place_holder">검색</string>
+    <string name="wish_button_title">읽고싶어요</string>
+    <string name="comment_button_title">코멘트</string>
+    <string name="reading_button_title">읽는 중</string>
 </resources>
