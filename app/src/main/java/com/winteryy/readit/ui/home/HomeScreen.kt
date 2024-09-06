@@ -30,7 +30,6 @@ fun HomeFeedScreen(
     LazyColumn(
         state = sectionLazyListState,
         modifier = modifier
-            .padding(horizontal = DEFAULT_PADDING)
     ) {
         itemsIndexed(
             items = sectionList,

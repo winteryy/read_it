@@ -28,8 +28,9 @@ fun ReadItNavGraph(
         composable(
             route = ReadItDestinations.HOME_ROUTE,
         ) { HomeRoute(
-            navActions.navigateToBookDetail
-        ) }
+                navActions.navigateToBookDetail
+            )
+        }
         composable(
             route = ReadItDestinations.COMMENT_ROUTE,
         ) { CommentScreen() }
@@ -37,10 +38,13 @@ fun ReadItNavGraph(
             route = ReadItDestinations.MY_PAGE_ROUTE,
         ) { MyPageScreen() }
         composable(
-            route = ReadItDestinations.BOOK_DETAIL_ROUTE
+            route = ReadItDestinations.BOOK_DETAIL_ROUTE,
         ) { navBackStackEntry ->
             val book = navBackStackEntry.savedStateHandle.get<Book>("book")
-            BookDetailScreen(book = book!!)
+            BookDetailScreen(
+                book = book!!,
+                onBackArrowClicked = { navController.popBackStack() }
+            )
         }
     }
 }

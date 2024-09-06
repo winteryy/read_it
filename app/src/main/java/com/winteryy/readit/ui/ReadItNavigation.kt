@@ -52,12 +52,12 @@ class ReadItNavigationActions(navController: NavController) {
     }
     val navigateToBookDetail: (Book) -> Unit = { book ->
         navController.navigate(ReadItDestinations.BOOK_DETAIL_ROUTE) {
-            navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
             }
             launchSingleTop = true
             restoreState = true
         }
+        navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
     }
 }

@@ -29,7 +29,8 @@ import java.util.Date
 @Composable
 fun BookDetailScreen(
     book: Book,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBackArrowClicked: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -38,7 +39,8 @@ fun BookDetailScreen(
         val scrollState = rememberScrollState()
 
         TextTopBar(
-            title = stringResource(R.string.book_detail_title)
+            title = stringResource(R.string.book_detail_title),
+            onBackArrowClicked =onBackArrowClicked
         )
         HorizontalDivider()
         Column(
@@ -50,8 +52,8 @@ fun BookDetailScreen(
             BookItemRow(book = book)
             Spacer(modifier = Modifier.size(12.dp))
             BookActionPanel(
-                2.5f,
-                BookSaveStatus.WISH,
+                book.rating,
+                book.bookSaveStatus,
                 false
             )
             Spacer(modifier = Modifier.size(12.dp))
