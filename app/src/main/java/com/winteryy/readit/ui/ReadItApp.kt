@@ -21,11 +21,15 @@ import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 fun ReadItApp() {
 
     val navController = rememberNavController()
+    val navActions = remember(navController) {
+        ReadItNavigationActions(navController)
+    }
 
     Scaffold(
-        bottomBar = { MainBottomNavigationBar(navController) }
+        bottomBar = { MainBottomNavigationBar(navController, navActions) }
     ) { paddingValues ->
         ReadItNavGraph(
+            navActions,
             Modifier.padding(paddingValues),
             navController,
             ReadItDestinations.HOME_ROUTE
@@ -35,7 +39,10 @@ fun ReadItApp() {
 }
 
 @Composable
-fun MainBottomNavigationBar(navController: NavHostController) {
+fun MainBottomNavigationBar(
+    navController: NavHostController,
+    navActions: ReadItNavigationActions
+    ) {
     val bottomNavigationItems = listOf(
         ReadItNavigationItem.Main,
         ReadItNavigationItem.Comment,
@@ -45,9 +52,6 @@ fun MainBottomNavigationBar(navController: NavHostController) {
     NavigationBar(
         containerColor = theme_grey_whiteSmoke,
     ) {
-        val navActions = remember(navController) {
-            ReadItNavigationActions(navController)
-        }
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route ?: ReadItDestinations.HOME_ROUTE
