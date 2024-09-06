@@ -1,6 +1,5 @@
 package com.winteryy.readit.ui.bookdetail
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -65,9 +64,7 @@ fun BookActionPanel(
                 modifier = Modifier
                     .padding(vertical = 16.dp)
             )
-            HorizontalDivider(
-                thickness = 0.5.dp
-            )
+            HorizontalDivider()
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -171,7 +168,7 @@ fun PanelItemPreview() {
     ReadItTheme {
         PanelItem(
             panelItemResource = PanelItemResource(
-                title = "보는 중",
+                title = "읽는 중",
                 defaultIcon = ImageVector.vectorResource(id = R.drawable.baseline_visibility_off_24),
                 checkedIcon = ImageVector.vectorResource(id = R.drawable.baseline_visibility_24)
             ),

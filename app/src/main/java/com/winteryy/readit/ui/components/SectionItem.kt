@@ -17,16 +17,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.model.SectionType
+import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import java.util.Date
 
@@ -37,43 +40,52 @@ fun SectionItem(
     onArrowClicked: (Section) -> Unit = {},
     onItemClicked: (Book) -> Unit = {}
 ) {
-    Column(modifier) {
-        val lazyRowState = rememberLazyListState()
-
-        Row(
+    Surface(
+        modifier = modifier,
+        color = Color.White
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(horizontal = DEFAULT_PADDING)
         ) {
-            Text(
-                text = section.sectionType.title,
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-            )
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "show all button",
-                modifier = Modifier.clickable {
-                    onArrowClicked(section)
-                }
-            )
-        }
-        LazyRow(state = lazyRowState) {
-            itemsIndexed(
-                items = section.bookList,
-                key = { _, book -> book.isbn }
-            ) { ind, book ->
-                if(ind!=0) Spacer(modifier = Modifier.size(8.dp))
-                BookItem(
-                    book = book,
-                    onClick = onItemClicked
+            val lazyRowState = rememberLazyListState()
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = section.sectionType.title,
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
                 )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "show all button",
+                    modifier = Modifier.clickable {
+                        onArrowClicked(section)
+                    }
+                )
+            }
+            LazyRow(state = lazyRowState) {
+                itemsIndexed(
+                    items = section.bookList,
+                    key = { _, book -> book.isbn }
+                ) { ind, book ->
+                    if(ind!=0) Spacer(modifier = Modifier.size(8.dp))
+                    BookItem(
+                        book = book,
+                        onClick = onItemClicked
+                    )
+                }
             }
         }
     }
+
 }
 
 @Preview(showBackground = true)
