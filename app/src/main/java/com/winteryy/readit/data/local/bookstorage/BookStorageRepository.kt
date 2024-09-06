@@ -11,5 +11,6 @@ interface BookStorageRepository {
     fun getWishBooksFlow(): Flow<Result<List<Book>>>
     fun getReadingBooksFlow(): Flow<Result<List<Book>>>
     fun getRatedBooksFlow(): Flow<Result<List<Book>>>
+    suspend fun getBookByIsbn(isbn: String): Result<Book>
     suspend fun deleteBookByIsbn(isbn: String): Result<Unit>
 }

@@ -8,4 +8,5 @@
     <string name="comment_button_title">코멘트</string>
     <string name="reading_button_title">읽는 중</string>
     <string name="book_description_title">책 소개</string>
+    <string name="book_detail_title">책 상세 정보</string>
 </resources>

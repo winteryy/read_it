@@ -1,5 +1,6 @@
 package com.winteryy.readit.data.local.bookstorage.impl
 
+import android.database.SQLException
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.bookstorage.BookDao
 import com.winteryy.readit.data.local.bookstorage.BookEntity
@@ -119,6 +120,21 @@ class BookStorageRepositoryImpl @Inject constructor(
             }
         }.catch { throwable ->
             emit(Result.Error(throwable.toException()))
+        }
+    }
+
+    override suspend fun getBookByIsbn(isbn: String): Result<Book> {
+        return try {
+            val result = bookDao.getBookByIsbn(isbn)
+            if(result!=null) {
+                Result.Success(result.toBook())
+            } else {
+                Result.Error(
+                    SQLException("No matched item")
+                )
+            }
+        } catch (e: Exception) {
+            Result.Error(e)
         }
     }
 

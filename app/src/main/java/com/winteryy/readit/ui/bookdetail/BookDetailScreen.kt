@@ -23,6 +23,7 @@ import com.winteryy.readit.ui.components.BookItemRow
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.components.TitleAndText
 import com.winteryy.readit.ui.theme.ReadItTheme
+import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 import java.util.Date
 
 @Composable
@@ -33,18 +34,18 @@ fun BookDetailScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White) //todo 완성 후 필요 체크
     ) {
         val scrollState = rememberScrollState()
 
         TextTopBar(
-            title = "책 상세 정보"
+            title = stringResource(R.string.book_detail_title)
         )
         HorizontalDivider()
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .verticalScroll(scrollState)
-                .background(Color.LightGray)
+                .background(theme_grey_whiteSmoke)
         ) {
             BookItemRow(book = book)
             Spacer(modifier = Modifier.size(12.dp))
