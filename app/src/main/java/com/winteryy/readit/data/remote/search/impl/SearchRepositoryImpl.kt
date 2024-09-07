@@ -1,5 +1,7 @@
 package com.winteryy.readit.data.remote.search.impl
 
+import com.winteryy.readit.data.LocalError
+import com.winteryy.readit.data.RemoteError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.remote.search.NaverBookApiService
 import com.winteryy.readit.data.remote.search.SearchRepository
@@ -29,7 +31,9 @@ class SearchRepositoryImpl @Inject constructor(
                 }
                 Result.Success(searchBookList)
             } catch (e: Exception) {
-                Result.Error(e)
+                Result.Error(
+                    RemoteError.NetworkError(e.message)
+                )
             }
         }
     }

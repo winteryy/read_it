@@ -1,11 +1,14 @@
 package com.winteryy.readit.ui
 
+import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.ui.bookdetail.BookDetailScreen
 import com.winteryy.readit.ui.comment.CommentScreen
@@ -39,12 +42,12 @@ fun ReadItNavGraph(
         ) { MyPageScreen() }
         composable(
             route = ReadItDestinations.BOOK_DETAIL_ROUTE,
-        ) { navBackStackEntry ->
-            val book = navBackStackEntry.savedStateHandle.get<Book>("book")
-            BookDetailScreen(
-                book = book!!,
-                onBackArrowClicked = { navController.popBackStack() }
-            )
+        ) { backStackEntry ->
+                BookDetailScreen(
+                    book = backStackEntry.savedStateHandle.get<Book>("book"),
+                    onBackArrowClicked = { navController.popBackStack() }
+                )
+
         }
     }
 }

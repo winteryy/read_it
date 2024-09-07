@@ -1,12 +1,11 @@
 package com.winteryy.readit.data.local.bookstorage.impl
 
-import android.database.SQLException
+import com.winteryy.readit.data.LocalError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.bookstorage.BookDao
 import com.winteryy.readit.data.local.bookstorage.BookEntity
 import com.winteryy.readit.data.local.bookstorage.BookStorageRepository
 import com.winteryy.readit.data.local.bookstorage.toBook
-import com.winteryy.readit.data.toException
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.BookSaveStatus
 import kotlinx.coroutines.flow.Flow
@@ -17,7 +16,7 @@ import javax.inject.Inject
 
 class BookStorageRepositoryImpl @Inject constructor(
     private val bookDao: BookDao
-): BookStorageRepository {
+) : BookStorageRepository {
 
     override suspend fun setWishBook(book: Book): Result<Unit> {
         try {
@@ -38,7 +37,9 @@ class BookStorageRepositoryImpl @Inject constructor(
 
             return Result.Success(Unit)
         } catch (e: Exception) {
-            return Result.Error(e)
+            return Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
         }
     }
 
@@ -61,7 +62,9 @@ class BookStorageRepositoryImpl @Inject constructor(
 
             return Result.Success(Unit)
         } catch (e: Exception) {
-            return Result.Error(e)
+            return Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
         }
     }
 
@@ -83,58 +86,80 @@ class BookStorageRepositoryImpl @Inject constructor(
             )
             return Result.Success(Unit)
         } catch (e: Exception) {
-            return Result.Error(e)
+            return Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
         }
     }
 
     override fun getWishBooksFlow(): Flow<Result<List<Book>>> {
         return bookDao.getWishBooksFlow().map { entityList ->
             try {
-                Result.Success( entityList.map { it.toBook() } )
+                Result.Success(entityList.map { it.toBook() })
             } catch (e: Exception) {
-                Result.Error(e)
+                Result.Error(
+                    LocalError.LocalDbError(e.message)
+                )
             }
         }.catch { throwable ->
-            emit(Result.Error(throwable.toException()))
+            emit(
+                Result.Error(
+                    LocalError.LocalDbError(throwable.message)
+                )
+            )
         }
     }
 
     override fun getReadingBooksFlow(): Flow<Result<List<Book>>> {
         return bookDao.getReadingBooksFlow().map { entityList ->
             try {
-                Result.Success( entityList.map { it.toBook() } )
+                Result.Success(entityList.map { it.toBook() })
             } catch (e: Exception) {
-                Result.Error(e)
+                Result.Error(
+                    LocalError.LocalDbError(e.message)
+                )
             }
         }.catch { throwable ->
-            emit(Result.Error(throwable.toException()))
+            emit(
+                Result.Error(
+                    LocalError.LocalDbError(throwable.message)
+                )
+            )
         }
     }
 
     override fun getRatedBooksFlow(): Flow<Result<List<Book>>> {
         return bookDao.getRatedBooksFlow().map { entityList ->
             try {
-                Result.Success( entityList.map { it.toBook() } )
+                Result.Success(entityList.map { it.toBook() })
             } catch (e: Exception) {
-                Result.Error(e)
+                Result.Error(
+                    LocalError.LocalDbError(e.message)
+                )
             }
         }.catch { throwable ->
-            emit(Result.Error(throwable.toException()))
+            emit(
+                Result.Error(
+                    LocalError.LocalDbError(throwable.message)
+                )
+            )
         }
     }
 
     override suspend fun getBookByIsbn(isbn: String): Result<Book> {
         return try {
             val result = bookDao.getBookByIsbn(isbn)
-            if(result!=null) {
+            if (result != null) {
                 Result.Success(result.toBook())
             } else {
                 Result.Error(
-                    SQLException("No matched item")
+                    LocalError.NoMatchItemError
                 )
             }
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
         }
     }
 
@@ -143,7 +168,9 @@ class BookStorageRepositoryImpl @Inject constructor(
             bookDao.deleteBookByIsbn(isbn)
             Result.Success(Unit)
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
         }
     }
 

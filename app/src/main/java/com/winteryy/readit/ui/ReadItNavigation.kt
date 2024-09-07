@@ -58,6 +58,7 @@ class ReadItNavigationActions(navController: NavController) {
             launchSingleTop = true
             restoreState = true
         }
+
         navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
     }
 }
