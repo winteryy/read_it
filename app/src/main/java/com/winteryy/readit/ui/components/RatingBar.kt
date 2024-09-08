@@ -54,7 +54,6 @@ fun RatingBar(
 
                     val roundedRating = round(fractionalRating/0.5F) * 0.5F
 
-                    println("drag ${baseRating + roundedRating}")
                     onRatingChanged(baseRating + roundedRating)
                 }
             } )
@@ -78,13 +77,10 @@ fun RatingBar(
                                     ind.toFloat()
                                 }
 
-                                println("curRating $rating")
                                 if (newRating == rating) {
                                     onRatingChanged(0f)
-                                    println("tap 0.0")
                                 } else {
                                     onRatingChanged(newRating)
-                                    println("tap $newRating")
                                 }
                             }
                         }
@@ -143,7 +139,6 @@ fun RatingBarPreview() {
                 rating.floatValue,
                 {
                     rating.floatValue = it
-                    println("Preview $rating")
                 }
             )
         }
