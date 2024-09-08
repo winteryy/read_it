@@ -45,9 +45,9 @@ fun BookActionPanel(
     hasComment: Boolean,
     modifier: Modifier = Modifier,
     onRatingChanged: (Float) -> Unit = {},
-    onWishButtonClicked: (Boolean) -> Unit = {},
-    onCommentButtonClicked: (Boolean) -> Unit = {},
-    onReadingButtonClicked: (Boolean) -> Unit = {}
+    onWishButtonClicked: () -> Unit = {},
+    onCommentButtonClicked: () -> Unit = {},
+    onReadingButtonClicked: () -> Unit = {}
 ) {
     Surface(
         modifier = modifier,
@@ -109,13 +109,13 @@ fun PanelItem(
     panelItemResource: PanelItemResource,
     modifier: Modifier = Modifier,
     isChecked: Boolean = false,
-    onClicked: (Boolean) -> Unit = {}
+    onClicked: () -> Unit = {}
 ) {
     Surface(
         modifier = modifier
             .size(120.dp, 80.dp)
             .clickable {
-                onClicked(isChecked)
+                onClicked()
             },
         color = Color.White
     ) {

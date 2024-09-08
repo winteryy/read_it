@@ -18,7 +18,7 @@ class BookStorageRepositoryImpl @Inject constructor(
     private val bookDao: BookDao
 ) : BookStorageRepository {
 
-    override suspend fun setWishBook(book: Book): Result<Unit> {
+    override suspend fun setBook(book: Book): Result<Unit> {
         try {
             bookDao.insertBook(
                 BookEntity(
@@ -29,59 +29,10 @@ class BookStorageRepositoryImpl @Inject constructor(
                     publisher = book.publisher,
                     description = book.description,
                     pubDate = book.pubDate,
-                    savedDate = Date(),
-                    bookSaveStatus = BookSaveStatus.WISH,
-                    rating = book.rating
-                )
-            )
-
-            return Result.Success(Unit)
-        } catch (e: Exception) {
-            return Result.Error(
-                LocalError.LocalDbError(e.message)
-            )
-        }
-    }
-
-    override suspend fun setReadingBook(book: Book): Result<Unit> {
-        try {
-            bookDao.insertBook(
-                BookEntity(
-                    isbn = book.isbn,
-                    title = book.title,
-                    image = book.image,
-                    author = book.author,
-                    publisher = book.publisher,
-                    description = book.description,
-                    pubDate = book.pubDate,
-                    savedDate = Date(),
-                    bookSaveStatus = BookSaveStatus.READING,
-                    rating = book.rating
-                )
-            )
-
-            return Result.Success(Unit)
-        } catch (e: Exception) {
-            return Result.Error(
-                LocalError.LocalDbError(e.message)
-            )
-        }
-    }
-
-    override suspend fun rateBook(book: Book, rating: Float): Result<Unit> {
-        try {
-            bookDao.insertBook(
-                BookEntity(
-                    isbn = book.isbn,
-                    title = book.title,
-                    image = book.image,
-                    author = book.author,
-                    publisher = book.publisher,
-                    description = book.description,
-                    pubDate = book.pubDate,
-                    savedDate = Date(),
+                    savedDate = book.saveDate?:Date(),
                     bookSaveStatus = BookSaveStatus.NONE,
-                    rating = rating
+                    rating = book.rating,
+                    ratedDate = book.ratedDate?:Date()
                 )
             )
             return Result.Success(Unit)

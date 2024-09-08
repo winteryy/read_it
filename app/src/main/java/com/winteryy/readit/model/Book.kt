@@ -15,7 +15,8 @@ data class Book(
     val pubDate: Date,
     val bookSaveStatus: BookSaveStatus = BookSaveStatus.NONE,
     val saveDate: Date? = null,
-    val rating: Float = 0.0F
+    val rating: Float = 0.0F,
+    val ratedDate: Date? = null
 ): Parcelable
 
 enum class BookSaveStatus {
