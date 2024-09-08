@@ -93,57 +93,61 @@ class BookStorageRepositoryImpl @Inject constructor(
     }
 
     override fun getWishBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getWishBooksFlow().map { entityList ->
-            try {
-                Result.Success(entityList.map { it.toBook() })
-            } catch (e: Exception) {
-                Result.Error(
-                    LocalError.LocalDbError(e.message)
+        return bookDao.getWishBooksFlow()
+            .map { entityList ->
+                try {
+                    Result.Success(entityList.map { it.toBook() })
+                } catch (e: Exception) {
+                    Result.Error(
+                        LocalError.LocalDbError(e.message)
+                    )
+                }
+            }.catch { throwable ->
+                emit(
+                    Result.Error(
+                        LocalError.LocalDbError(throwable.message)
+                    )
                 )
             }
-        }.catch { throwable ->
-            emit(
-                Result.Error(
-                    LocalError.LocalDbError(throwable.message)
-                )
-            )
-        }
     }
 
     override fun getReadingBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getReadingBooksFlow().map { entityList ->
-            try {
-                Result.Success(entityList.map { it.toBook() })
-            } catch (e: Exception) {
-                Result.Error(
-                    LocalError.LocalDbError(e.message)
+        return bookDao.getReadingBooksFlow()
+            .map { entityList ->
+                try {
+                    Result.Success(entityList.map { it.toBook() })
+                } catch (e: Exception) {
+                    Result.Error(
+                        LocalError.LocalDbError(e.message)
+                    )
+                }
+            }
+            .catch { throwable ->
+                emit(
+                    Result.Error(
+                        LocalError.LocalDbError(throwable.message)
+                    )
                 )
             }
-        }.catch { throwable ->
-            emit(
-                Result.Error(
-                    LocalError.LocalDbError(throwable.message)
-                )
-            )
-        }
     }
 
     override fun getRatedBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getRatedBooksFlow().map { entityList ->
-            try {
-                Result.Success(entityList.map { it.toBook() })
-            } catch (e: Exception) {
-                Result.Error(
-                    LocalError.LocalDbError(e.message)
+        return bookDao.getRatedBooksFlow()
+            .map { entityList ->
+                try {
+                    Result.Success(entityList.map { it.toBook() })
+                } catch (e: Exception) {
+                    Result.Error(
+                        LocalError.LocalDbError(e.message)
+                    )
+                }
+            }.catch { throwable ->
+                emit(
+                    Result.Error(
+                        LocalError.LocalDbError(throwable.message)
+                    )
                 )
             }
-        }.catch { throwable ->
-            emit(
-                Result.Error(
-                    LocalError.LocalDbError(throwable.message)
-                )
-            )
-        }
     }
 
     override suspend fun getBookByIsbn(isbn: String): Result<Book> {
@@ -161,6 +165,26 @@ class BookStorageRepositoryImpl @Inject constructor(
                 LocalError.LocalDbError(e.message)
             )
         }
+    }
+
+    override fun getBookFlowByIsbn(isbn: String): Flow<Result<Book>> {
+        return bookDao.getBookFlowByIsbn(isbn)
+            .map { bookEntity ->
+                if (bookEntity != null) {
+                    Result.Success(bookEntity.toBook())
+                } else {
+                    Result.Error(
+                        LocalError.NoMatchItemError
+                    )
+                }
+            }
+            .catch { throwable ->
+                emit(
+                    Result.Error(
+                        LocalError.LocalDbError(throwable.message)
+                    )
+                )
+            }
     }
 
     override suspend fun deleteBookByIsbn(isbn: String): Result<Unit> {
