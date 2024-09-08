@@ -7,7 +7,6 @@ import com.winteryy.readit.data.local.bookstorage.BookEntity
 import com.winteryy.readit.data.local.bookstorage.BookStorageRepository
 import com.winteryy.readit.data.local.bookstorage.toBook
 import com.winteryy.readit.model.Book
-import com.winteryy.readit.model.BookSaveStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -30,7 +29,7 @@ class BookStorageRepositoryImpl @Inject constructor(
                     description = book.description,
                     pubDate = book.pubDate,
                     savedDate = book.saveDate?:Date(),
-                    bookSaveStatus = BookSaveStatus.NONE,
+                    bookSaveStatus = book.bookSaveStatus,
                     rating = book.rating,
                     ratedDate = book.ratedDate?:Date()
                 )

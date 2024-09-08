@@ -27,6 +27,7 @@ class BookDetailViewModel @Inject constructor(
         book?.let {
             viewModelScope.launch {
                 bookStorageRepository.getBookFlowByIsbn(book.isbn).collectLatest { result ->
+                    println(result.toString())
                     when(result) {
                         is Result.Error -> {
                             if(result.exception is LocalError.NoMatchItemError) {
@@ -37,7 +38,6 @@ class BookDetailViewModel @Inject constructor(
                         }
                         is Result.Success -> _bookState.value = BookDetailUiState.Success(result.data)
                     }
-
                 }
             }
         } ?: { _bookState.value = BookDetailUiState.Fail("책 정보를 정상적으로 불러오지 못 했습니다.") }
@@ -77,6 +77,7 @@ class BookDetailViewModel @Inject constructor(
         if(capturedState is BookDetailUiState.Success) {
             bookStorageRepository.setBook(
                 book = capturedState.book.copy(
+                    bookSaveStatus = BookSaveStatus.NONE,
                     rating = rating,
                     ratedDate = Date()
                 )

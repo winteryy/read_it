@@ -39,7 +39,7 @@ fun BookDetailScreen(
 
     bookDetailUiState.let { state ->
         when(state) {
-            is BookDetailUiState.Fail -> { Text("fail") }
+            is BookDetailUiState.Fail -> { Text(state.msg) }
             BookDetailUiState.Loading -> { Text("loading") }
             is BookDetailUiState.Success -> {
                 Column(
@@ -64,7 +64,10 @@ fun BookDetailScreen(
                         BookActionPanel(
                             state.book.rating,
                             state.book.bookSaveStatus,
-                            false
+                            false,
+                            onRatingChanged = { bookDetailViewModel.setRating(it) },
+                            onWishButtonClicked = { bookDetailViewModel.toggleWishBook() },
+                            onReadingButtonClicked = { bookDetailViewModel.toggleReadingBook() },
                         )
                         Spacer(modifier = Modifier.size(12.dp))
                         TitleAndText(
