@@ -1,10 +1,21 @@
 package com.winteryy.readit.data.remote.search.impl
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.map
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.remote.search.NaverBookApiService
+import com.winteryy.readit.data.remote.search.SearchPagingSource
+import com.winteryy.readit.data.remote.search.SearchPagingSource.Companion.SEARCH_PAGE_SIZE
 import com.winteryy.readit.data.remote.search.SearchRepository
 import com.winteryy.readit.model.Book
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -31,6 +42,26 @@ class SearchRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 Result.Error(e)
             }
+        }
+    }
+
+    override fun searchBooksFlow(query: String): Flow<Result<PagingData<Book>>> {
+        return flow {
+            try {
+                val pager = Pager(
+                    config = PagingConfig(
+                        pageSize = SEARCH_PAGE_SIZE,
+                        enablePlaceholders = false,
+                        maxSize = SEARCH_PAGE_SIZE * 3
+                    ),
+                    pagingSourceFactory = { SearchPagingSource(naverBookApiService, query) }
+                ).flow
+
+                emit(Result.Success(pager.first().map { it.toBook() }))
+            } catch (e: Exception) {
+                emit(Result.Error(e))
+            }
+
         }
     }
 }

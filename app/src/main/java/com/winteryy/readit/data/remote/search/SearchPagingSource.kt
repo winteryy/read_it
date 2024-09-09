@@ -14,11 +14,11 @@ class SearchPagingSource @Inject constructor(
         return try {
             val response = naverBookApiService.searchBooks(
                 query = query,
-                start = (pageNum - 1) * PAGE_SIZE + 1,
+                start = (pageNum - 1) * SEARCH_PAGE_SIZE + 1,
                 display = params.loadSize,
                 sort = "sim"
             )
-            val endOfPage = response.total <= pageNum * PAGE_SIZE
+            val endOfPage = response.total <= pageNum * SEARCH_PAGE_SIZE
 
             LoadResult.Page(
                 data = response.items,
@@ -38,7 +38,7 @@ class SearchPagingSource @Inject constructor(
     }
 
     companion object {
-        private const val PAGE_SIZE  = 20
+        const val SEARCH_PAGE_SIZE  = 20
     }
 
 }
