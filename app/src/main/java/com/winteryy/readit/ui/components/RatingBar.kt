@@ -52,7 +52,7 @@ fun RatingBar(
                     val normalizedX = (change.position.x - rect.left)
                     val fractionalRating = (normalizedX/rect.width).coerceIn(0f, 1f)
 
-                    val roundedRating = round(fractionalRating/0.5F) * 0.5F
+                    val roundedRating = round(fractionalRating/0.5f) * 0.5f
 
                     onRatingChanged(baseRating + roundedRating)
                 }
@@ -94,7 +94,7 @@ fun RatingBar(
                         .matchParentSize()
                 )
 
-                val fillWidth = when {
+                val fillWidthRatio = when {
                     (rating >= ind) -> 1f
                     (rating <= ind-1) -> 0f
                     else -> 0.5f
@@ -103,7 +103,7 @@ fun RatingBar(
                 Box(
                     modifier = Modifier
                         .matchParentSize()
-                        .clip(ClippingShape(fillWidth))
+                        .clip(ClippingShape(fillWidthRatio))
                 ) {
                     Icon(
                         tint = theme_color_malibu,
@@ -118,13 +118,13 @@ fun RatingBar(
     }
 }
 
-private class ClippingShape(private val fillWidth: Float): Shape {
+private class ClippingShape(private val fillWidthRatio: Float): Shape {
     override fun createOutline(
         size: Size,
         layoutDirection: LayoutDirection,
         density: Density
     ): Outline {
-        val clippingRect = Rect(Offset.Zero, Size(size.width * fillWidth, size.height))
+        val clippingRect = Rect(Offset.Zero, Size(size.width * fillWidthRatio, size.height))
         return Outline.Rectangle(clippingRect)
     }
 }
