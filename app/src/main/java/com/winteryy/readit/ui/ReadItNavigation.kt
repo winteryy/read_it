@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.winteryy.readit.model.Book
 
 sealed class ReadItNavigationItem(val route: String, val label: String, val icon: ImageVector) {
     data object Main : ReadItNavigationItem(ReadItDestinations.HOME_ROUTE, "홈", Icons.Filled.Home)
@@ -18,6 +19,7 @@ object ReadItDestinations {
     const val HOME_ROUTE = "home"
     const val COMMENT_ROUTE = "comment"
     const val MY_PAGE_ROUTE = "my_page"
+    const val BOOK_DETAIL_ROUTE = "book_detail"
 }
 
 class ReadItNavigationActions(navController: NavController) {
@@ -47,5 +49,16 @@ class ReadItNavigationActions(navController: NavController) {
             launchSingleTop = true
             restoreState = true
         }
+    }
+    val navigateToBookDetail: (Book) -> Unit = { book ->
+        navController.navigate(ReadItDestinations.BOOK_DETAIL_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+
+        navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
     }
 }

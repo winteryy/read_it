@@ -3,8 +3,9 @@ package com.winteryy.readit.data.remote.search.impl
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import androidx.paging.map
+import com.winteryy.readit.data.ReadItError
+import com.winteryy.readit.data.RemoteError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.remote.search.NaverBookApiService
 import com.winteryy.readit.data.remote.search.SearchPagingSource
@@ -15,7 +16,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -40,7 +40,9 @@ class SearchRepositoryImpl @Inject constructor(
                 }
                 Result.Success(searchBookList)
             } catch (e: Exception) {
-                Result.Error(e)
+                Result.Error(
+                    RemoteError.NetworkError(e.message)
+                )
             }
         }
     }
@@ -59,7 +61,11 @@ class SearchRepositoryImpl @Inject constructor(
 
                 emit(Result.Success(pager.first().map { it.toBook() }))
             } catch (e: Exception) {
-                emit(Result.Error(e))
+                emit(
+                    Result.Error(
+                        RemoteError.NetworkError(e.message)
+                    )
+                )
             }
 
         }

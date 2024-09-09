@@ -16,6 +16,7 @@ import java.util.Date
 
 @Composable
 fun HomeRoute(
+    navigateToBookDetail: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
@@ -50,18 +51,21 @@ fun HomeRoute(
                     HomeFeedScreen(
                         sectionList = curState.sectionList,
                         sectionLazyListState = sectionLazyListState,
-                        onSectionArrowClicked = { homeViewModel.setSectionDetailScreen(it) }
+                        onSectionArrowClicked = { homeViewModel.setSectionDetailScreen(it) },
+                        onSectionItemClicked = navigateToBookDetail
                     )
                 }
                 is HomeUiState.SearchState -> HomeSearchScreen()
                 is HomeUiState.SearchResultState -> {
                     HomeSearchResultScreen(
                         query = curState.query,
-                        bookList = curState.bookList
+                        bookList = curState.bookList,
+                        onResultItemClicked = navigateToBookDetail
                     )
                 }
                 is HomeUiState.SectionDetailState -> HomeSectionDetailScreen(
-                    bookList = curState.section.bookList
+                    bookList = curState.section.bookList,
+                    onBookItemClicked = navigateToBookDetail
                 )
             }
         }
@@ -72,117 +76,4 @@ fun HomeRoute(
 @Preview(showBackground = true)
 @Composable
 fun HomeRoutePreview() {
-    val dummySection = Section(
-        sectionType = SectionType.READING,
-        bookList = listOf(
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "1321412",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214130",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214129",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214128",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214127",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214126",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214125",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214124",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214121",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214122",
-                description = "asdasd",
-                pubDate = Date(),
-            ),
-            Book(
-                "정의란 무엇인가",
-                "https://picsum.photos/300/400",
-                "test author",
-                "test publisher",
-                "13214123",
-                description = "asdasd",
-                pubDate = Date(),
-            )
-        )
-    )
-    ReadItTheme {
-        HomeRoute(
-//            HomeUiState.FeedState(
-//                sectionList = listOf(
-//                    dummySection, dummySection, dummySection, dummySection
-//                )
-//            )
-        )
-    }
 }
