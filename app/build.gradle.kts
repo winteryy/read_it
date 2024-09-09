@@ -95,6 +95,10 @@ dependencies {
     implementation(libs.coil)
     implementation(libs.coil.compose)
 
+    //Paging3
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+
     testImplementation(libs.junit)
 
     androidTestImplementation(libs.androidx.junit)
