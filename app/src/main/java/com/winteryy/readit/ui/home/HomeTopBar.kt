@@ -1,12 +1,9 @@
 package com.winteryy.readit.ui.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -19,20 +16,19 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.R
+import com.winteryy.readit.ui.components.TextTopBar
+import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
-import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
 sealed interface HomeTopBarType {
@@ -58,26 +54,10 @@ fun HomeTopBar(
 
     when (homeTopBarType) {
         is HomeTopBarType.TextBar -> {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .heightIn(min = 40.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "back button",
-                    modifier = Modifier.clickable { onBackArrowClicked() }
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                Text(
-                    text = homeTopBarType.title,
-                    style = Typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Bold
-                    )
-                )
-            }
+            TextTopBar(
+                title = homeTopBarType.title,
+                onBackArrowClicked = onBackArrowClicked
+            )
         }
 
         is HomeTopBarType.SearchBar -> {
@@ -118,7 +98,7 @@ fun HomeTopBar(
                 },
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(DEFAULT_PADDING)
                     .heightIn(min = 56.dp)
                     .onFocusChanged { focusState ->
                         if (focusState.isFocused) onTextInputTriggered()

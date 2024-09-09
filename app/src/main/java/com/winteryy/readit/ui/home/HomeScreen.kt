@@ -16,6 +16,7 @@ import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.SectionItem
+import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 
 @Composable
@@ -29,7 +30,6 @@ fun HomeFeedScreen(
     LazyColumn(
         state = sectionLazyListState,
         modifier = modifier
-            .padding(horizontal = 16.dp)
     ) {
         itemsIndexed(
             items = sectionList,
@@ -70,7 +70,7 @@ fun HomeSearchResultScreen(
         bookList = bookList,
         lazyListState = lazyListState,
         modifier = modifier
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = DEFAULT_PADDING),
         onItemClicked = onResultItemClicked
     )
 }
@@ -87,7 +87,7 @@ fun HomeSectionDetailScreen(
         bookList = bookList,
         lazyListState = lazyListState,
         modifier = modifier
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = DEFAULT_PADDING),
         onItemClicked = onBookItemClicked
 
     )

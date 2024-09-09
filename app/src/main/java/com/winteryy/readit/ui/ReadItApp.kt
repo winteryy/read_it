@@ -21,11 +21,15 @@ import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 fun ReadItApp() {
 
     val navController = rememberNavController()
+    val navActions = remember(navController) {
+        ReadItNavigationActions(navController)
+    }
 
     Scaffold(
-        bottomBar = { MainBottomNavigationBar(navController) }
+        bottomBar = { MainBottomNavigationBar(navController, navActions) }
     ) { paddingValues ->
         ReadItNavGraph(
+            navActions,
             Modifier.padding(paddingValues),
             navController,
             ReadItDestinations.HOME_ROUTE
@@ -35,38 +39,41 @@ fun ReadItApp() {
 }
 
 @Composable
-fun MainBottomNavigationBar(navController: NavHostController) {
+fun MainBottomNavigationBar(
+    navController: NavHostController,
+    navActions: ReadItNavigationActions
+    ) {
     val bottomNavigationItems = listOf(
         ReadItNavigationItem.Main,
         ReadItNavigationItem.Comment,
         ReadItNavigationItem.MyPage
     )
 
-    NavigationBar(
-        containerColor = theme_grey_whiteSmoke,
-    ) {
-        val navActions = remember(navController) {
-            ReadItNavigationActions(navController)
-        }
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route ?: ReadItDestinations.HOME_ROUTE
 
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route ?: ReadItDestinations.HOME_ROUTE
-
-        bottomNavigationItems.forEach { item ->
-            NavigationBarItem(
-                selected = currentRoute == item.route,
-                onClick = {
-                    when (item.route) {
-                        ReadItDestinations.HOME_ROUTE -> navActions.navigateToHome()
-                        ReadItDestinations.COMMENT_ROUTE -> navActions.navigateToComment()
-                        ReadItDestinations.MY_PAGE_ROUTE -> navActions.navigateToMyPage()
-                    }
-                },
-                icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                label = { Text(text = item.label) }
+    if(currentRoute != ReadItDestinations.BOOK_DETAIL_ROUTE) {
+        NavigationBar(
+            containerColor = theme_grey_whiteSmoke,
+        ) {
+            bottomNavigationItems.forEach { item ->
+                NavigationBarItem(
+                    selected = currentRoute == item.route,
+                    onClick = {
+                        when (item.route) {
+                            ReadItDestinations.HOME_ROUTE -> navActions.navigateToHome()
+                            ReadItDestinations.COMMENT_ROUTE -> navActions.navigateToComment()
+                            ReadItDestinations.MY_PAGE_ROUTE -> navActions.navigateToMyPage()
+                        }
+                    },
+                    icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
+                    label = { Text(text = item.label) }
                 )
+            }
+
         }
     }
+
 }
 
 @Preview(showBackground = true)

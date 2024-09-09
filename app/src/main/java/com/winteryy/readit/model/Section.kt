@@ -19,7 +19,7 @@ sealed interface SectionType {
         override val id: Long
             get() = 2L
         override val title: String
-            get() = "읽을 예정인 책"
+            get() = "읽고 싶은 책"
     }
     object RATED: SectionType {
         override val id: Long
