@@ -1,6 +1,7 @@
 package com.winteryy.readit.data.local.bookstorage
 
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -17,19 +18,19 @@ interface BookDao {
     fun getWishBooks(): Flow<List<BookEntity>>
 
     @Query("SELECT * FROM books WHERE bookSaveStatus='WISH' ORDER BY savedDate DESC")
-    fun getWishBooksPagingFlow(): Flow<PagingData<Book>>
+    fun getWishBooksPaging(): PagingSource<Int, BookEntity>
 
     @Query("SELECT * FROM books WHERE bookSaveStatus='READING' ORDER BY savedDate DESC LIMIT 20")
     fun getReadingBooks(): Flow<List<BookEntity>>
 
     @Query("SELECT * FROM books WHERE bookSaveStatus='READING' ORDER BY savedDate DESC")
-    fun getReadingBooksPagingFlow(): Flow<PagingData<Book>>
+    fun getReadingBooksPaging(): PagingSource<Int, BookEntity>
 
-    @Query("SELECT * FROM books WHERE rating>0.0 ORDER BY savedDate DESC LIMIT 20")
+    @Query("SELECT * FROM books WHERE rating>0.0 ORDER BY ratedDate DESC LIMIT 20")
     fun getRatedBooks(): Flow<List<BookEntity>>
 
-    @Query("SELECT * FROM books WHERE rating>0.0 ORDER BY savedDate DESC")
-    fun getRatedBooksPagingFlow(): Flow<PagingData<BookEntity>>
+    @Query("SELECT * FROM books WHERE rating>0.0 ORDER BY ratedDate DESC")
+    fun getRatedBooksPaging(): PagingSource<Int, BookEntity>
 
     @Query("SELECT * FROM books WHERE isbn=:isbn")
     suspend fun getBookByIsbn(isbn: String): BookEntity?
