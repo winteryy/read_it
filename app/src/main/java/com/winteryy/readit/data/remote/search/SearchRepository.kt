@@ -13,7 +13,7 @@ interface SearchRepository {
         sort: String = "sim"
     ): Result<List<Book>>
 
-    fun searchBooksFlow(
+    fun getSearchPagingData(
         query: String
-    ): Flow<Result<PagingData<Book>>>
+    ): Result<Flow<PagingData<Book>>>
 }

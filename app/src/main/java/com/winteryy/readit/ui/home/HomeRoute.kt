@@ -9,10 +9,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.winteryy.readit.model.Book
-import com.winteryy.readit.model.Section
-import com.winteryy.readit.model.SectionType
-import com.winteryy.readit.ui.theme.ReadItTheme
-import java.util.Date
 
 @Composable
 fun HomeRoute(
@@ -59,7 +55,7 @@ fun HomeRoute(
                 is HomeUiState.SearchResultState -> {
                     HomeSearchResultScreen(
                         query = curState.query,
-                        bookList = curState.bookList,
+                        bookPagingDataFlow = curState.bookPagingDataFlow,
                         onResultItemClicked = navigateToBookDetail
                     )
                 }

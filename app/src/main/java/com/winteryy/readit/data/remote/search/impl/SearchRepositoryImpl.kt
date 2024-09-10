@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.winteryy.readit.data.ReadItError
 import com.winteryy.readit.data.RemoteError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.remote.search.NaverBookApiService
@@ -14,14 +13,13 @@ import com.winteryy.readit.data.remote.search.SearchRepository
 import com.winteryy.readit.model.Book
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
     private val naverBookApiService: NaverBookApiService
-): SearchRepository {
+) : SearchRepository {
     override suspend fun searchBooks(
         query: String,
         start: Int,
@@ -47,27 +45,27 @@ class SearchRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun searchBooksFlow(query: String): Flow<Result<PagingData<Book>>> {
-        return flow {
-            try {
-                val pager = Pager(
+    override fun getSearchPagingData(query: String): Result<Flow<PagingData<Book>>> {
+        return try {
+            Result.Success(
+                Pager(
                     config = PagingConfig(
-                        pageSize = SEARCH_PAGE_SIZE,
-                        enablePlaceholders = false,
-                        maxSize = SEARCH_PAGE_SIZE * 3
-                    ),
-                    pagingSourceFactory = { SearchPagingSource(naverBookApiService, query) }
-                ).flow
-
-                emit(Result.Success(pager.first().map { it.toBook() }))
-            } catch (e: Exception) {
-                emit(
-                    Result.Error(
-                        RemoteError.NetworkError(e.message)
-                    )
-                )
-            }
-
+                    pageSize = SEARCH_PAGE_SIZE,
+                    enablePlaceholders = false,
+                    maxSize = SEARCH_PAGE_SIZE * 3
+                ),
+                pagingSourceFactory = { SearchPagingSource(naverBookApiService, query) }
+            ).flow
+                .map { pagingData ->
+                    pagingData.map { bookResponse ->
+                        bookResponse.toBook()
+                    }
+                }
+            )
+        } catch (e: Exception) {
+            Result.Error(
+                RemoteError.NetworkError(e.message)
+            )
         }
     }
 }

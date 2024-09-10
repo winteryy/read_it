@@ -45,6 +45,7 @@ class HomeViewModel @Inject constructor(
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private var feedJob: Job? = null
+    private var searchJob: Job? = null
 
     init {
         setFeedScreen()
@@ -82,8 +83,24 @@ class HomeViewModel @Inject constructor(
         feedJob = null
     }
 
-    fun setSearchResultScreen(query: String) = viewModelScope.launch {
-        when(val result = searchRepository.searchBooks(query)) {
+//    fun setSearchResultScreen(query: String) = viewModelScope.launch {
+//        when(val result = searchRepository.searchBooks(query)) {
+//            is Result.Error -> {
+//                //todo 에러 핸들링
+//            }
+//            is Result.Success -> {
+//                _homeUiState.update {
+//                    HomeUiState.SearchResultState(
+//                        query,
+//                        result.data
+//                    )
+//                }
+//            }
+//        }
+//    }
+
+    fun setSearchResultScreen(query: String) {
+        when(val result = searchRepository.getSearchPagingData(query)) {
             is Result.Error -> {
                 //todo 에러 핸들링
             }
@@ -96,6 +113,11 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun clearSearchScreen() {
+        searchJob?.cancel()
+        searchJob = null
     }
 
     fun setSectionDetailScreen(section: Section) {

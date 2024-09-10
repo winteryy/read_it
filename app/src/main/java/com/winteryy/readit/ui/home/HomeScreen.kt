@@ -12,12 +12,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.SectionItem
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun HomeFeedScreen(
@@ -56,18 +59,19 @@ fun HomeSearchScreen(
 @Composable
 fun HomeSearchResultScreen(
     query: String,
-    bookList: List<Book>,
+    bookPagingDataFlow: Flow<PagingData<Book>>,
     modifier: Modifier = Modifier,
     onResultItemClicked: (Book) -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
+    val searchLazyItems = bookPagingDataFlow.collectAsLazyPagingItems()
 
     LaunchedEffect(query) {
         lazyListState.scrollToItem(0)
     }
 
     BookListColumn(
-        bookList = bookList,
+        lazyPagingBooks = searchLazyItems,
         lazyListState = lazyListState,
         modifier = modifier
             .padding(horizontal = DEFAULT_PADDING),
@@ -84,7 +88,7 @@ fun HomeSectionDetailScreen(
     val lazyListState = rememberLazyListState()
 
     BookListColumn(
-        bookList = bookList,
+        lazyPagingBooks = bookList,
         lazyListState = lazyListState,
         modifier = modifier
             .padding(horizontal = DEFAULT_PADDING),
