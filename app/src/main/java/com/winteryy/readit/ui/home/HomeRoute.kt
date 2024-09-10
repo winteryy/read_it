@@ -30,7 +30,7 @@ fun HomeRoute(
                     is HomeUiState.SearchState -> HomeTopBarType.SearchBar.Searching
                     is HomeUiState.SearchResultState -> HomeTopBarType.SearchBar.Searching
                     is HomeUiState.SectionDetailState -> HomeTopBarType.TextBar(
-                        title = curState.section.sectionType.title
+                        title = curState.sectionType.title
                     )
                 },
                 onTextInputTriggered = { homeViewModel.setSearchingScreen() },
@@ -60,7 +60,7 @@ fun HomeRoute(
                     )
                 }
                 is HomeUiState.SectionDetailState -> HomeSectionDetailScreen(
-                    bookList = curState.section.bookList,
+                    bookPagingDataFlow = curState.sectionBookPagingDataFlow,
                     onBookItemClicked = navigateToBookDetail
                 )
             }

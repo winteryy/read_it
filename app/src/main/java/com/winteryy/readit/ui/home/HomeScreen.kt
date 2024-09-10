@@ -81,14 +81,15 @@ fun HomeSearchResultScreen(
 
 @Composable
 fun HomeSectionDetailScreen(
-    bookList: List<Book>,
+    bookPagingDataFlow: Flow<PagingData<Book>>,
     modifier: Modifier = Modifier,
     onBookItemClicked: (Book) -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
+    val sectionBookLazyItems = bookPagingDataFlow.collectAsLazyPagingItems()
 
     BookListColumn(
-        lazyPagingBooks = bookList,
+        lazyPagingBooks = sectionBookLazyItems,
         lazyListState = lazyListState,
         modifier = modifier
             .padding(horizontal = DEFAULT_PADDING),

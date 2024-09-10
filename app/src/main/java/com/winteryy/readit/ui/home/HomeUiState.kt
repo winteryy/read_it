@@ -3,6 +3,7 @@ package com.winteryy.readit.ui.home
 import androidx.paging.PagingData
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
+import com.winteryy.readit.model.SectionType
 import kotlinx.coroutines.flow.Flow
 
 sealed interface HomeUiState {
@@ -21,6 +22,7 @@ sealed interface HomeUiState {
     ): HomeUiState
 
     data class SectionDetailState(
-        val section: Section
+        val sectionBookPagingDataFlow: Flow<PagingData<Book>>,
+        val sectionType: SectionType
     ): HomeUiState
 }
