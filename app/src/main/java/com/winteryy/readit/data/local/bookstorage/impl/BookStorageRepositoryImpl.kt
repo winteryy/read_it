@@ -42,8 +42,8 @@ class BookStorageRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getWishBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getWishBooksFlow()
+    override fun getWishBooks(): Flow<Result<List<Book>>> {
+        return bookDao.getWishBooks()
             .map { entityList ->
                 try {
                     Result.Success(entityList.map { it.toBook() })
@@ -61,8 +61,8 @@ class BookStorageRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getReadingBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getReadingBooksFlow()
+    override fun getReadingBooks(): Flow<Result<List<Book>>> {
+        return bookDao.getReadingBooks()
             .map { entityList ->
                 try {
                     Result.Success(entityList.map { it.toBook() })
@@ -81,8 +81,8 @@ class BookStorageRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getRatedBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getRatedBooksFlow()
+    override fun getRatedBooks(): Flow<Result<List<Book>>> {
+        return bookDao.getRatedBooks()
             .map { entityList ->
                 try {
                     Result.Success(entityList.map { it.toBook() })
@@ -147,5 +147,7 @@ class BookStorageRepositoryImpl @Inject constructor(
             )
         }
     }
+
+
 
 }

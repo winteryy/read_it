@@ -31,9 +31,9 @@ class HomeViewModel @Inject constructor(
     val homeUiState: StateFlow<HomeUiState> get() = _homeUiState.asStateFlow()
 
     private val homeFeedSectionList: StateFlow<List<Section>> = combine(
-        bookStorageRepository.getReadingBooksFlow(),
-        bookStorageRepository.getWishBooksFlow(),
-        bookStorageRepository.getRatedBooksFlow()
+        bookStorageRepository.getReadingBooks(),
+        bookStorageRepository.getWishBooks(),
+        bookStorageRepository.getRatedBooks()
     ) { readingBooksResult, wishBooksResult, ratedBooksResult ->
 
         listOf(
