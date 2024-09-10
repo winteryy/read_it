@@ -1,7 +1,9 @@
-package com.winteryy.readit.data.remote.search
+package com.winteryy.readit.data.remote.search.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.winteryy.readit.data.remote.search.BookItemResponse
+import com.winteryy.readit.data.remote.search.NaverBookApiService
 import javax.inject.Inject
 
 class SearchPagingSource @Inject constructor(
