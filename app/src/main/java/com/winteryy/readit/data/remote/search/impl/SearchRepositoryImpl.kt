@@ -7,9 +7,9 @@ import androidx.paging.map
 import com.winteryy.readit.data.RemoteError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.remote.search.NaverBookApiService
+import com.winteryy.readit.data.remote.search.SearchRepository
 import com.winteryy.readit.data.remote.search.paging.SearchPagingSource
 import com.winteryy.readit.data.remote.search.paging.SearchPagingSource.Companion.SEARCH_PAGE_SIZE
-import com.winteryy.readit.data.remote.search.SearchRepository
 import com.winteryy.readit.model.Book
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

@@ -90,7 +90,6 @@ class HomeViewModel @Inject constructor(
             is Result.Success -> {
                 _homeUiState.update {
                     HomeUiState.SearchResultState(
-                        query,
                         result.data
                     )
                 }

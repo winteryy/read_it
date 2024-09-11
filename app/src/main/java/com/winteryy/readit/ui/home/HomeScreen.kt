@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,17 +57,12 @@ fun HomeSearchScreen(
 
 @Composable
 fun HomeSearchResultScreen(
-    query: String,
     bookPagingDataFlow: Flow<PagingData<Book>>,
     modifier: Modifier = Modifier,
     onResultItemClicked: (Book) -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
     val searchLazyItems = bookPagingDataFlow.collectAsLazyPagingItems()
-
-    LaunchedEffect(query) {
-        lazyListState.scrollToItem(0)
-    }
 
     BookListColumn(
         lazyPagingBooks = searchLazyItems,
@@ -94,7 +88,6 @@ fun HomeSectionDetailScreen(
         modifier = modifier
             .padding(horizontal = DEFAULT_PADDING),
         onItemClicked = onBookItemClicked
-
     )
 }
 

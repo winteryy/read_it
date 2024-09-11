@@ -54,7 +54,6 @@ fun HomeRoute(
                 is HomeUiState.SearchState -> HomeSearchScreen()
                 is HomeUiState.SearchResultState -> {
                     HomeSearchResultScreen(
-                        query = curState.query,
                         bookPagingDataFlow = curState.bookPagingDataFlow,
                         onResultItemClicked = navigateToBookDetail
                     )

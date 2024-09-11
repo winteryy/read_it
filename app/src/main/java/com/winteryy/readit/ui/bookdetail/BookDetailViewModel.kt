@@ -27,7 +27,6 @@ class BookDetailViewModel @Inject constructor(
         book?.let {
             viewModelScope.launch {
                 bookStorageRepository.getBookFlowByIsbn(book.isbn).collectLatest { result ->
-                    println(result.toString())
                     when(result) {
                         is Result.Error -> {
                             if(result.exception is LocalError.NoMatchItemError) {

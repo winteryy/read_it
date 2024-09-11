@@ -17,7 +17,6 @@ sealed interface HomeUiState {
     ): HomeUiState
 
     data class SearchResultState(
-        val query: String,
         val bookPagingDataFlow: Flow<PagingData<Book>>
     ): HomeUiState
 
