@@ -9,10 +9,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.winteryy.readit.model.Book
-import com.winteryy.readit.model.Section
-import com.winteryy.readit.model.SectionType
-import com.winteryy.readit.ui.theme.ReadItTheme
-import java.util.Date
 
 @Composable
 fun HomeRoute(
@@ -34,7 +30,7 @@ fun HomeRoute(
                     is HomeUiState.SearchState -> HomeTopBarType.SearchBar.Searching
                     is HomeUiState.SearchResultState -> HomeTopBarType.SearchBar.Searching
                     is HomeUiState.SectionDetailState -> HomeTopBarType.TextBar(
-                        title = curState.section.sectionType.title
+                        title = curState.sectionType.title
                     )
                 },
                 onTextInputTriggered = { homeViewModel.setSearchingScreen() },
@@ -58,13 +54,12 @@ fun HomeRoute(
                 is HomeUiState.SearchState -> HomeSearchScreen()
                 is HomeUiState.SearchResultState -> {
                     HomeSearchResultScreen(
-                        query = curState.query,
-                        bookList = curState.bookList,
+                        bookPagingDataFlow = curState.bookPagingDataFlow,
                         onResultItemClicked = navigateToBookDetail
                     )
                 }
                 is HomeUiState.SectionDetailState -> HomeSectionDetailScreen(
-                    bookList = curState.section.bookList,
+                    bookPagingDataFlow = curState.sectionBookPagingDataFlow,
                     onBookItemClicked = navigateToBookDetail
                 )
             }

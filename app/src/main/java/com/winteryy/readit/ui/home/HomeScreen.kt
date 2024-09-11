@@ -8,16 +8,18 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.SectionItem
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
+import kotlinx.coroutines.flow.Flow
 
 @Composable
 fun HomeFeedScreen(
@@ -55,19 +57,15 @@ fun HomeSearchScreen(
 
 @Composable
 fun HomeSearchResultScreen(
-    query: String,
-    bookList: List<Book>,
+    bookPagingDataFlow: Flow<PagingData<Book>>,
     modifier: Modifier = Modifier,
     onResultItemClicked: (Book) -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
-
-    LaunchedEffect(query) {
-        lazyListState.scrollToItem(0)
-    }
+    val searchLazyItems = bookPagingDataFlow.collectAsLazyPagingItems()
 
     BookListColumn(
-        bookList = bookList,
+        lazyPagingBooks = searchLazyItems,
         lazyListState = lazyListState,
         modifier = modifier
             .padding(horizontal = DEFAULT_PADDING),
@@ -77,19 +75,19 @@ fun HomeSearchResultScreen(
 
 @Composable
 fun HomeSectionDetailScreen(
-    bookList: List<Book>,
+    bookPagingDataFlow: Flow<PagingData<Book>>,
     modifier: Modifier = Modifier,
     onBookItemClicked: (Book) -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
+    val sectionBookLazyItems = bookPagingDataFlow.collectAsLazyPagingItems()
 
     BookListColumn(
-        bookList = bookList,
+        lazyPagingBooks = sectionBookLazyItems,
         lazyListState = lazyListState,
         modifier = modifier
             .padding(horizontal = DEFAULT_PADDING),
         onItemClicked = onBookItemClicked
-
     )
 }
 

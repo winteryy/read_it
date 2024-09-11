@@ -1,5 +1,9 @@
 package com.winteryy.readit.data.local.bookstorage.impl
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.winteryy.readit.data.LocalError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.bookstorage.BookDao
@@ -28,10 +32,10 @@ class BookStorageRepositoryImpl @Inject constructor(
                     publisher = book.publisher,
                     description = book.description,
                     pubDate = book.pubDate,
-                    savedDate = book.saveDate?:Date(),
+                    savedDate = book.saveDate ?: Date(),
                     bookSaveStatus = book.bookSaveStatus,
                     rating = book.rating,
-                    ratedDate = book.ratedDate?:Date()
+                    ratedDate = book.ratedDate ?: Date()
                 )
             )
             return Result.Success(Unit)
@@ -42,8 +46,8 @@ class BookStorageRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getWishBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getWishBooksFlow()
+    override fun getWishBooks(): Flow<Result<List<Book>>> {
+        return bookDao.getWishBooks()
             .map { entityList ->
                 try {
                     Result.Success(entityList.map { it.toBook() })
@@ -61,8 +65,30 @@ class BookStorageRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getReadingBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getReadingBooksFlow()
+    override fun getWishBooksPagingFlow(): Result<Flow<PagingData<Book>>> {
+        return try {
+            Result.Success(
+                Pager(
+                    config = PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        enablePlaceholders = false,
+                        maxSize = PAGE_SIZE * 3
+                    ),
+                    pagingSourceFactory = { bookDao.getWishBooksPaging() }
+                ).flow
+                    .map { pagingData ->
+                        pagingData.map { it.toBook() }
+                    }
+            )
+        } catch (e: Exception) {
+            Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
+        }
+    }
+
+    override fun getReadingBooks(): Flow<Result<List<Book>>> {
+        return bookDao.getReadingBooks()
             .map { entityList ->
                 try {
                     Result.Success(entityList.map { it.toBook() })
@@ -81,8 +107,30 @@ class BookStorageRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getRatedBooksFlow(): Flow<Result<List<Book>>> {
-        return bookDao.getRatedBooksFlow()
+    override fun getReadingBooksPagingFlow(): Result<Flow<PagingData<Book>>> {
+        return try {
+            Result.Success(
+                Pager(
+                    config = PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        enablePlaceholders = false,
+                        maxSize = PAGE_SIZE * 3
+                    ),
+                    pagingSourceFactory = { bookDao.getReadingBooksPaging() }
+                ).flow
+                    .map { pagingData ->
+                        pagingData.map { it.toBook() }
+                    }
+            )
+        } catch (e: Exception) {
+            Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
+        }
+    }
+
+    override fun getRatedBooks(): Flow<Result<List<Book>>> {
+        return bookDao.getRatedBooks()
             .map { entityList ->
                 try {
                     Result.Success(entityList.map { it.toBook() })
@@ -98,6 +146,28 @@ class BookStorageRepositoryImpl @Inject constructor(
                     )
                 )
             }
+    }
+
+    override fun getRatedBooksPagingFlow(): Result<Flow<PagingData<Book>>> {
+        return try {
+            Result.Success(
+                Pager(
+                    config = PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        enablePlaceholders = false,
+                        maxSize = PAGE_SIZE * 3
+                    ),
+                    pagingSourceFactory = { bookDao.getRatedBooksPaging() }
+                ).flow
+                    .map { pagingData ->
+                        pagingData.map { it.toBook() }
+                    }
+            )
+        } catch (e: Exception) {
+            Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
+        }
     }
 
     override suspend fun getBookByIsbn(isbn: String): Result<Book> {
@@ -146,6 +216,10 @@ class BookStorageRepositoryImpl @Inject constructor(
                 LocalError.LocalDbError(e.message)
             )
         }
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 
 }
