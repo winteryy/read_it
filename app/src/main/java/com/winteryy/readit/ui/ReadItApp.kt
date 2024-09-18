@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui
 
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -26,7 +27,9 @@ fun ReadItApp() {
     }
 
     Scaffold(
-        bottomBar = { MainBottomNavigationBar(navController, navActions) }
+        bottomBar = { MainBottomNavigationBar(navController, navActions) },
+        modifier = Modifier
+            .imePadding()
     ) { paddingValues ->
         ReadItNavGraph(
             navActions,

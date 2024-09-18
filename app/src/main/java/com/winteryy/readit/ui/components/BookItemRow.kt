@@ -35,7 +35,7 @@ private val BOOK_HEIGHT = 150.dp
 fun BookItemRow(
     book: Book,
     modifier: Modifier = Modifier,
-    onClick: (Book) -> Unit = {}
+    onClick: ((Book) -> Unit)? = null
 ) {
     Surface(
         modifier = modifier,
@@ -45,7 +45,13 @@ fun BookItemRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(DEFAULT_PADDING)
-                .clickable { onClick(book) }
+                .let { originModifier ->
+                    onClick?.let { action ->
+                        originModifier.clickable {
+                            action(book)
+                        }
+                    } ?: originModifier
+                }
         ) {
             AsyncImage(
                 model = book.image,

@@ -73,6 +73,9 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    //ConstraintLayout Compose
+    implementation(libs.androidx.constraintlayout.compose)
+
     //Navigation
     implementation(libs.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
