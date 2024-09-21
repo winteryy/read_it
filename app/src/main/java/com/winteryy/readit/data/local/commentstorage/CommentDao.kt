@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,9 +20,11 @@ interface CommentDao {
     @Query("SELECT * FROM comments ORDER BY updateDate DESC")
     fun getAllCommentsPaging(): PagingSource<Int, CommentEntity>
 
+    @Transaction
     @Query("SELECT * FROM comments INNER JOIN books ON bookIsbn = books.isbn ORDER BY updateDate DESC LIMIT 20")
     fun getCommentsWithBooks(): Flow<List<CommentWithBookDto>>
 
+    @Transaction
     @Query("SELECT * FROM comments INNER JOIN books ON bookIsbn = books.isbn ORDER BY updateDate DESC")
     fun getCommentsWithBooksPaging(): PagingSource<Int, CommentWithBookDto>
 }

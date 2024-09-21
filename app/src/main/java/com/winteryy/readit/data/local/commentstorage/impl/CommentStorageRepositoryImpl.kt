@@ -15,6 +15,7 @@ import javax.inject.Inject
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.bookstorage.toBook
 import com.winteryy.readit.data.local.commentstorage.toComment
+import com.winteryy.readit.data.local.commentstorage.toCommentBookPair
 import kotlinx.coroutines.flow.map
 
 class CommentStorageRepositoryImpl @Inject constructor(
@@ -77,9 +78,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
         return commentDao.getCommentsWithBooks()
             .map { dtoList ->
                 try {
-                    Result.Success(dtoList.map {
-                        it.commentEntity.toComment() to it.bookEntity.toBook()
-                    } )
+                    Result.Success(dtoList.map { it.toCommentBookPair() } )
                 } catch (e: Exception) {
                     Result.Error(
                         LocalError.LocalDbError(e.message)
@@ -100,11 +99,8 @@ class CommentStorageRepositoryImpl @Inject constructor(
                     pagingSourceFactory = { commentDao.getCommentsWithBooksPaging() }
                 ).flow
                     .map { pagingData ->
-                        pagingData.map {
-                            it.commentEntity.toComment() to it.bookEntity.toBook()
-                        }
+                        pagingData.map { it.toCommentBookPair() }
                     }
-
             )
         } catch (e: Exception) {
             Result.Error(
