@@ -27,4 +27,8 @@ interface CommentDao {
     @Transaction
     @Query("SELECT * FROM comments INNER JOIN books ON bookIsbn = books.isbn ORDER BY updateDate DESC")
     fun getCommentsWithBooksPaging(): PagingSource<Int, CommentWithBookDto>
+
+    @Query("SELECT COUNT(*) FROM comments")
+    fun getCommentNumFlow(): Flow<Int>
+
 }

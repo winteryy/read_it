@@ -109,6 +109,19 @@ class CommentStorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getCommentNum(): Flow<Result<Int>> {
+        return commentDao.getCommentNumFlow()
+            .map { num ->
+                try {
+                    Result.Success(num)
+                } catch (e: Exception) {
+                    Result.Error(
+                        LocalError.LocalDbError(e.message)
+                    )
+                }
+            }
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
     }

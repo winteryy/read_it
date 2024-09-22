@@ -13,4 +13,5 @@ interface CommentStorageRepository {
     fun getAllCommentsPagingFlow(): Result<Flow<PagingData<Comment>>>
     fun getCommentsWithBooks(): Flow<Result<List<Pair<Comment, Book>>>>
     fun getCommentsWithBooksPagingFlow(): Result<Flow<PagingData<Pair<Comment, Book>>>>
+    fun getCommentNum(): Flow<Result<Int>>
 }
