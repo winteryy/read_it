@@ -31,19 +31,19 @@ class CommentViewModel @Inject constructor(
     fun setCommentMainState() {
         currentJob?.cancel()
 
-        currentJob = viewModelScope.launch {
-            commentStorageRepository.getRecentComments()
-                .combine(commentStorageRepository.getCommentNum()) { recentCommentList, commentNum ->
-                    if (recentCommentList is Result.Success && commentNum is Result.Success) {
-                        _commentUiState.value = CommentUiState.CommentMainState(
-                            commentNum.data,
-                            recentCommentList.data
-                        )
-                    } else {
-                        _commentUiState.value = CommentUiState.FailState
-                    }
-                }
-        }
+//        currentJob = viewModelScope.launch {
+//            commentStorageRepository.getRecentComments()
+//                .combine(commentStorageRepository.getCommentNum()) { recentCommentList, commentNum ->
+//                    if (recentCommentList is Result.Success && commentNum is Result.Success) {
+//                        _commentUiState.value = CommentUiState.CommentMainState(
+//                            commentNum.data,
+//                            recentCommentList.data
+//                        )
+//                    } else {
+//                        _commentUiState.value = CommentUiState.FailState
+//                    }
+//                }
+//        }
     }
 
     fun setCommentListState() {

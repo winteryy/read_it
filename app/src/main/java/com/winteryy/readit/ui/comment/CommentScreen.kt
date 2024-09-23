@@ -20,6 +20,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.model.Book
+import com.winteryy.readit.model.Comment
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
@@ -30,30 +31,15 @@ import java.util.Date
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CommentMainScreen() {
-    val bookList = listOf(
-        Book(
-            "정의란 무엇인가",
-            "https://picsum.photos/300/400",
-            "test author",
-            "test publisher",
-            "1321412",
-            description = "asdasd",
-            pubDate = Date(),
-        ),
-        Book(
-            "정의란 무엇인가",
-            "https://picsum.photos/300/400",
-            "test author",
-            "test publisher",
-            "1321412",
-            description = "asdasd",
-            pubDate = Date(),
-        )
-    )
+fun CommentMainScreen(
+    commentNum: Int,
+    recentCommentList: List<Pair<Comment, Book>>,
+    modifier: Modifier = Modifier
+) {
+    //todo 코멘트 0건일 때 처리
 
     val pagerState = rememberPagerState() {
-        2
+        recentCommentList.size
     }
 
     Column(
@@ -72,7 +58,8 @@ fun CommentMainScreen() {
                 .padding(top = DEFAULT_PADDING),
         ) { page ->
             CommentItem(
-                book = bookList[page],
+                book = recentCommentList[page].second,
+                comment = recentCommentList[page].first,
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -93,7 +80,7 @@ fun CommentMainScreen() {
                             color = theme_color_lightDodgerBlue
                         )
                     ) {
-                        append("24")
+                        append(commentNum.toString())
                     }
                     append("권의 책에 코멘트를 작성했어요!")
                 },
@@ -124,7 +111,25 @@ fun CommentListScreen() {
 @Preview(showBackground = true)
 fun CommentMainScreenPreview() {
     ReadItTheme {
-        CommentMainScreen()
+        CommentMainScreen(
+            commentNum = 1,
+            recentCommentList = listOf(
+                Comment(
+                    1,
+                    "내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. ",
+                    Date(),
+                    "123214125215"
+                ) to Book(
+                    "정의란 무엇인가",
+                    "https://picsum.photos/300/400",
+                    "test author",
+                    "test publisher",
+                    "1321412",
+                    description = "asdasd",
+                    pubDate = Date(),
+                )
+            )
+        )
     }
 }
 

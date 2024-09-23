@@ -39,11 +39,11 @@ class CommentStorageRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getRecentComments(): Flow<Result<List<Comment>>> {
+    override fun getRecentComments(): Flow<Result<List<Pair<Comment, Book>>>> {
         return commentDao.getRecentComments()
-            .map { entityList ->
+            .map { dtoList ->
                 try {
-                    Result.Success(entityList.map { it.toComment() })
+                    Result.Success(dtoList.map { it.toCommentBookPair() })
                 } catch (e: Exception) {
                     Result.Error(
                         LocalError.LocalDbError(e.message)

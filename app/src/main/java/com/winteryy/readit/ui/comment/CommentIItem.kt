@@ -15,17 +15,20 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.winteryy.readit.model.Book
+import com.winteryy.readit.model.Comment
 import com.winteryy.readit.ui.components.BookItem
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
+import com.winteryy.readit.ui.util.toReviewDateText
 import java.util.Date
 
 @Composable
 fun CommentItem(
     book: Book,
+    comment: Comment,
     modifier: Modifier = Modifier
 ) {
     Surface(
@@ -49,7 +52,7 @@ fun CommentItem(
                     }
             )
             Text(
-                text = "tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test tfor testfor testfor test ",
+                text = comment.content,
                 style = Typography.labelMedium,
                 overflow = TextOverflow.Ellipsis,
                 softWrap = true,
@@ -64,7 +67,7 @@ fun CommentItem(
                     }
             )
             Text(
-                text = "24.09.23",
+                text = comment.updateDate.toReviewDateText(),
                 style = Typography.labelMedium,
                 color = theme_color_lightDodgerBlue,
                 textAlign = TextAlign.Right,
@@ -91,6 +94,12 @@ fun CommentItemPreview() {
                 "1321412",
                 description = "asdasd",
                 pubDate = Date(),
+            ),
+            comment = Comment(
+                1,
+                "내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. ",
+                Date(),
+                "123214125215"
             )
         )
     }
