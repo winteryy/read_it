@@ -13,18 +13,26 @@ fun CommentRoute(
     val commentViewModel: CommentViewModel = hiltViewModel()
     val commentUiState = commentViewModel.commentUiState.collectAsStateWithLifecycle()
 
-    when(commentUiState.value) {
-        is CommentUiState.CommentListState -> {
-            CommentListScreen()
-        }
-        is CommentUiState.CommentMainState -> {
-            CommentMainScreen(0, emptyList())
-        }
-        CommentUiState.FailState -> {
-            Text(text = "Fail State")
-        }
-        CommentUiState.Loading -> {
-            Text(text = "Loading State")
+    commentUiState.value.let { curState ->
+        when(curState) {
+            is CommentUiState.CommentListState -> {
+                CommentListScreen(
+                    commentWithBookPagingDataFlow = curState.commentPagingDataFlow
+                )
+            }
+            is CommentUiState.CommentMainState -> {
+                CommentMainScreen(
+                    commentNum = 0,
+                    recentCommentList = emptyList()
+                )
+            }
+            CommentUiState.FailState -> {
+                Text(text = "Fail State")
+            }
+            CommentUiState.Loading -> {
+                Text(text = "Loading State")
+            }
         }
     }
+
 }

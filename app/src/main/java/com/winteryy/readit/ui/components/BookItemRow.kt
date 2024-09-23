@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.winteryy.readit.model.Book
+import com.winteryy.readit.model.Comment
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
@@ -86,6 +87,64 @@ fun BookItemRow(
         }
     }
 }
+
+@Composable
+fun BookWithCommentItemRow(
+    book: Book,
+    comment: Comment,
+    modifier: Modifier = Modifier,
+    onClick: ((Pair<Comment, Book>) -> Unit)? = null
+) {
+    Surface(
+        modifier = modifier,
+        color = Color.White
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(DEFAULT_PADDING)
+                .let { originModifier ->
+                    onClick?.let { action ->
+                        originModifier.clickable {
+                            action(comment to book)
+                        }
+                    } ?: originModifier
+                }
+        ) {
+            AsyncImage(
+                model = book.image,
+                contentDescription = book.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp, BOOK_HEIGHT)
+                    .clip(RoundedCornerShape(10.dp))
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(BOOK_HEIGHT)
+                    .padding(start = 8.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = book.title,
+                    style = Typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 2
+                )
+                Text(
+                    text = book.author,
+                    style = Typography.bodyMedium
+                )
+                Text(
+                    text = book.pubDate.getYearByCalender().toString() + " · " + book.publisher,
+                    style = Typography.bodyMedium.copy(color = theme_grey_gunPowder)
+                )
+            }
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Composable

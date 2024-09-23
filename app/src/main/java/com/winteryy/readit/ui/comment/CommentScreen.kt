@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,14 +20,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Comment
+import com.winteryy.readit.ui.components.BookWithCommentListColumn
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -97,14 +102,20 @@ fun CommentMainScreen(
 }
 
 @Composable
-fun CommentListScreen() {
+fun CommentListScreen(
+    commentWithBookPagingDataFlow: Flow<PagingData<Pair<Comment, Book>>>,
+    modifier: Modifier = Modifier
+) {
+    val lazyPagingBookWithComments = commentWithBookPagingDataFlow.collectAsLazyPagingItems()
+    val lazyListState = rememberLazyListState()
+
     TextTopBar(
         title = "코멘트를 작성한 책"
     )
-//    BookListColumn(
-//        lazyPagingBooks = ,
-//        lazyListState =
-//    )
+    BookWithCommentListColumn(
+        lazyPagingBookWithComments = lazyPagingBookWithComments,
+        lazyListState = lazyListState
+    )
 }
 
 @Composable
@@ -133,10 +144,10 @@ fun CommentMainScreenPreview() {
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun CommentListScreenPreview() {
-    ReadItTheme {
-        CommentListScreen()
-    }
-}
+//@Composable
+//@Preview(showBackground = true)
+//fun CommentListScreenPreview() {
+//    ReadItTheme {
+//        CommentListScreen()
+//    }
+//}
