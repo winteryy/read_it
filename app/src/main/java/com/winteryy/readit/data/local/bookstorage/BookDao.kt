@@ -1,13 +1,11 @@
 package com.winteryy.readit.data.local.bookstorage
 
-import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.winteryy.readit.model.Book
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -44,5 +42,5 @@ interface BookDao {
 
     @Transaction
     @Query("SELECT books.* FROM books INNER JOIN comments ON books.isbn = comments.bookIsbn")
-    fun getBooksHavingComment(): Flow<List<BookEntity>>
+    fun getBooksHavingCommentPaging(): PagingSource<Int, BookEntity>
 }

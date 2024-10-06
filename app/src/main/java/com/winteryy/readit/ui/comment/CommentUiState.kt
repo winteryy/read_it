@@ -13,7 +13,7 @@ sealed interface CommentUiState {
         val recentCommentWithBookList: List<Pair<Comment, Book>>
     ): CommentUiState
     data class CommentListState(
-        val commentPagingDataFlow: Flow<PagingData<Pair<Comment, Book>>>
+        val booksHavingCommentPagingDataFlow: Flow<PagingData<Book>>
     ): CommentUiState
 
 }

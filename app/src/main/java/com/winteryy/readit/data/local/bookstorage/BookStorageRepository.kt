@@ -16,5 +16,5 @@ interface BookStorageRepository {
     suspend fun getBookByIsbn(isbn: String): Result<Book>
     fun getBookFlowByIsbn(isbn: String): Flow<Result<Book>>
     suspend fun deleteBookByIsbn(isbn: String): Result<Unit>
-    fun getBooksHavingComment(): Flow<Result<List<Book>>>
+    fun getBooksHavingCommentPagingFlow(): Result<Flow<PagingData<Book>>>
 }

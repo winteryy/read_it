@@ -1,6 +1,7 @@
 package com.winteryy.readit.ui.comment
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +25,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Comment
-import com.winteryy.readit.ui.components.BookWithCommentListColumn
+import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
@@ -39,6 +40,7 @@ import java.util.Date
 fun CommentMainScreen(
     commentNum: Int,
     recentCommentList: List<Pair<Comment, Book>>,
+    navigateToCommentList: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     //todo 코멘트 0건일 때 처리
@@ -74,7 +76,8 @@ fun CommentMainScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = DEFAULT_PADDING)
-                .clip(RoundedCornerShape(10.dp)),
+                .clip(RoundedCornerShape(10.dp))
+                .clickable { navigateToCommentList() },
             color = theme_grey_whiteSmoke
         ) {
             Text(
@@ -103,17 +106,19 @@ fun CommentMainScreen(
 
 @Composable
 fun CommentListScreen(
-    commentWithBookPagingDataFlow: Flow<PagingData<Pair<Comment, Book>>>,
+    booksHavingCommentPagingDataFlow: Flow<PagingData<Book>>,
+    navigateToCommentMain: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val lazyPagingBookWithComments = commentWithBookPagingDataFlow.collectAsLazyPagingItems()
+    val lazyPagingBooksHavingComment = booksHavingCommentPagingDataFlow.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
 
     TextTopBar(
-        title = "코멘트를 작성한 책"
+        title = "코멘트를 작성한 책",
+        onBackArrowClicked = navigateToCommentMain
     )
-    BookWithCommentListColumn(
-        lazyPagingBookWithComments = lazyPagingBookWithComments,
+    BookListColumn(
+        lazyPagingBooks = lazyPagingBooksHavingComment,
         lazyListState = lazyListState
     )
 }
@@ -139,7 +144,8 @@ fun CommentMainScreenPreview() {
                     description = "asdasd",
                     pubDate = Date(),
                 )
-            )
+            ),
+            navigateToCommentList = {}
         )
     }
 }

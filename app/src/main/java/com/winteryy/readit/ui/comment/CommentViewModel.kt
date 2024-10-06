@@ -3,6 +3,7 @@ package com.winteryy.readit.ui.comment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.winteryy.readit.data.Result
+import com.winteryy.readit.data.local.bookstorage.BookStorageRepository
 import com.winteryy.readit.data.local.commentstorage.CommentStorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CommentViewModel @Inject constructor(
+    private val bookStorageRepository: BookStorageRepository,
     private val commentStorageRepository: CommentStorageRepository
 ) : ViewModel() {
     private val _commentUiState: MutableStateFlow<CommentUiState> =
@@ -53,7 +55,7 @@ class CommentViewModel @Inject constructor(
         currentJob?.cancel()
 
         viewModelScope.launch {
-            when (val result = commentStorageRepository.getCommentsWithBooksPagingFlow()) {
+            when (val result = bookStorageRepository.getBooksHavingCommentPagingFlow()) {
                 is Result.Error -> {
                     //todo 에러 핸들링
                 }

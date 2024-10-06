@@ -17,13 +17,15 @@ fun CommentRoute(
         when(curState) {
             is CommentUiState.CommentListState -> {
                 CommentListScreen(
-                    commentWithBookPagingDataFlow = curState.commentPagingDataFlow
+                    booksHavingCommentPagingDataFlow = curState.booksHavingCommentPagingDataFlow,
+                    navigateToCommentMain = { commentViewModel.setCommentMainState() }
                 )
             }
             is CommentUiState.CommentMainState -> {
                 CommentMainScreen(
-                    commentNum = 0,
-                    recentCommentList = emptyList()
+                    commentNum = curState.commentNum,
+                    recentCommentList = curState.recentCommentWithBookList,
+                    navigateToCommentList = { commentViewModel.setCommentListState() }
                 )
             }
             CommentUiState.FailState -> {
