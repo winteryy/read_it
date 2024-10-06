@@ -124,7 +124,7 @@ fun BookWithCommentItemRow(
                     .fillMaxWidth()
                     .height(BOOK_HEIGHT)
                     .padding(start = 8.dp),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Top
             ) {
                 Text(
                     text = book.title,
@@ -132,14 +132,7 @@ fun BookWithCommentItemRow(
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 2
                 )
-                Text(
-                    text = book.author,
-                    style = Typography.bodyMedium
-                )
-                Text(
-                    text = book.pubDate.getYearByCalender().toString() + " · " + book.publisher,
-                    style = Typography.bodyMedium.copy(color = theme_grey_gunPowder)
-                )
+                Text(text = comment.content)
             }
         }
     }
@@ -159,6 +152,30 @@ fun BookItemRowPreview() {
                 "1321412",
                 description = "asdasd",
                 pubDate = Date(),
+            )
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BookWithCommentItemRowPreview() {
+    ReadItTheme {
+        BookWithCommentItemRow(
+            book = Book(
+                "정의란 무엇인가",
+                "https://picsum.photos/300/400",
+                "test author",
+                "test publisher",
+                "1321412",
+                description = "asdasd",
+                pubDate = Date(),
+            ),
+            comment = Comment(
+                2131312,
+                "코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 코멘트 내용 테스트용 장문 텍스트 ",
+                Date(),
+                "1321412"
             )
         )
     }

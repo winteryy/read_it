@@ -5,18 +5,17 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.winteryy.readit.data.LocalError
+import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.commentstorage.CommentDao
 import com.winteryy.readit.data.local.commentstorage.CommentEntity
 import com.winteryy.readit.data.local.commentstorage.CommentStorageRepository
+import com.winteryy.readit.data.local.commentstorage.toComment
+import com.winteryy.readit.data.local.commentstorage.toCommentBookPair
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Comment
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-import com.winteryy.readit.data.Result
-import com.winteryy.readit.data.local.bookstorage.toBook
-import com.winteryy.readit.data.local.commentstorage.toComment
-import com.winteryy.readit.data.local.commentstorage.toCommentBookPair
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 class CommentStorageRepositoryImpl @Inject constructor(
     private val commentDao: CommentDao
@@ -114,6 +113,25 @@ class CommentStorageRepositoryImpl @Inject constructor(
             .map { num ->
                 try {
                     Result.Success(num)
+                } catch (e: Exception) {
+                    Result.Error(
+                        LocalError.LocalDbError(e.message)
+                    )
+                }
+            }
+    }
+
+    override fun getCommentByIsbn(isbn: String): Flow<Result<Comment>> {
+        return commentDao.getCommentByIsbn(isbn = isbn)
+            .map { commentEntity ->
+                try {
+                    if (commentEntity != null) {
+                        Result.Success(commentEntity.toComment())
+                    } else {
+                        Result.Error(
+                            LocalError.NoMatchItemError
+                        )
+                    }
                 } catch (e: Exception) {
                     Result.Error(
                         LocalError.LocalDbError(e.message)

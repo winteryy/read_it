@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import com.winteryy.readit.model.Book
 import kotlinx.coroutines.flow.Flow
 
@@ -40,4 +41,8 @@ interface BookDao {
 
     @Query("DELETE FROM books WHERE isbn=:isbn")
     suspend fun deleteBookByIsbn(isbn: String)
+
+    @Transaction
+    @Query("SELECT books.* FROM books INNER JOIN comments ON books.isbn = comments.bookIsbn")
+    fun getBooksHavingComment(): Flow<List<BookEntity>>
 }

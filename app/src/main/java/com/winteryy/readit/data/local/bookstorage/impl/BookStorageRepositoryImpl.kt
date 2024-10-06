@@ -218,6 +218,19 @@ class BookStorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getBooksHavingComment(): Flow<Result<List<Book>>> {
+        return bookDao.getBooksHavingComment()
+            .map { bookEntityList ->
+                try {
+                    Result.Success(bookEntityList.map { it.toBook() })
+                } catch (e: Exception) {
+                    Result.Error(
+                        LocalError.LocalDbError(e.message)
+                    )
+                }
+            }
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
     }

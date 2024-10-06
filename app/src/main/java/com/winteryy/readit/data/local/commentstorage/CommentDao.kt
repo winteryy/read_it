@@ -31,4 +31,7 @@ interface CommentDao {
     @Query("SELECT COUNT(*) FROM comments")
     fun getCommentNumFlow(): Flow<Int>
 
+    @Query("SELECT * FROM comments WHERE bookIsbn = :isbn")
+    fun getCommentByIsbn(isbn: String): Flow<CommentEntity?>
+
 }
