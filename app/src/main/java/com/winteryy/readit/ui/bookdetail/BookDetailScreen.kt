@@ -31,7 +31,7 @@ fun BookDetailScreen(
     onBackArrowClicked: () -> Unit = {}
 ) {
     val bookDetailViewModel: BookDetailViewModel = hiltViewModel()
-    val bookDetailUiState by bookDetailViewModel.bookState.collectAsStateWithLifecycle()
+    val bookDetailUiState by bookDetailViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         bookDetailViewModel.initBook(book)
@@ -50,7 +50,7 @@ fun BookDetailScreen(
 
                     TextTopBar(
                         title = stringResource(R.string.book_detail_title),
-                        onBackArrowClicked =onBackArrowClicked
+                        onBackArrowClicked = onBackArrowClicked
                     )
                     HorizontalDivider()
                     Column(

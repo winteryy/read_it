@@ -41,6 +41,6 @@ interface BookDao {
     suspend fun deleteBookByIsbn(isbn: String)
 
     @Transaction
-    @Query("SELECT books.* FROM books INNER JOIN comments ON books.isbn = comments.bookIsbn")
+    @Query("SELECT books.* FROM books INNER JOIN comments ON books.isbn = comments.bookIsbn ORDER BY comments.updateDate DESC")
     fun getBooksHavingCommentPaging(): PagingSource<Int, BookEntity>
 }

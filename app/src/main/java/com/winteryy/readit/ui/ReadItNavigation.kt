@@ -20,6 +20,7 @@ object ReadItDestinations {
     const val COMMENT_ROUTE = "comment"
     const val MY_PAGE_ROUTE = "my_page"
     const val BOOK_DETAIL_ROUTE = "book_detail"
+    const val EDIT_COMMENT_ROUTE = "edit_comment"
 }
 
 class ReadItNavigationActions(navController: NavController) {
@@ -60,5 +61,17 @@ class ReadItNavigationActions(navController: NavController) {
         }
 
         navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
+    }
+
+    val navigateToEditComment: (String) -> Unit = { isbn ->
+        navController.navigate(ReadItDestinations.EDIT_COMMENT_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+
+        navController.currentBackStackEntry?.savedStateHandle?.set("isbn", isbn)
     }
 }
