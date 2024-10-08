@@ -28,6 +28,7 @@ class BookDetailViewModel @Inject constructor(
     fun initBook(book: Book?) {
         book?.let {
             viewModelScope.launch {
+                //todo data consistency 문제 있음, map merge 등으로 변경하기
                 launch {
                     bookStorageRepository.getBookFlowByIsbn(book.isbn).collectLatest { result ->
                         when(result) {

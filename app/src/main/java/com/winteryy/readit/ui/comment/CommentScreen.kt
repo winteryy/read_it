@@ -41,6 +41,7 @@ fun CommentMainScreen(
     commentNum: Int,
     recentCommentList: List<Pair<Comment, Book>>,
     navigateToCommentList: () -> Unit,
+    onCommentItemClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     //todo 코멘트 0건일 때 처리
@@ -67,6 +68,7 @@ fun CommentMainScreen(
             CommentItem(
                 book = recentCommentList[page].second,
                 comment = recentCommentList[page].first,
+                onRecentCommentClicked = onCommentItemClicked,
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -108,6 +110,7 @@ fun CommentMainScreen(
 fun CommentListScreen(
     booksHavingCommentPagingDataFlow: Flow<PagingData<Book>>,
     navigateToCommentMain: () -> Unit,
+    onCommentItemClicked: (Book) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val lazyPagingBooksHavingComment = booksHavingCommentPagingDataFlow.collectAsLazyPagingItems()
@@ -122,7 +125,8 @@ fun CommentListScreen(
         )
         BookListColumn(
             lazyPagingBooks = lazyPagingBooksHavingComment,
-            lazyListState = lazyListState
+            lazyListState = lazyListState,
+            onItemClicked = onCommentItemClicked
         )
     }
 }
@@ -149,6 +153,7 @@ fun CommentMainScreenPreview() {
                     pubDate = Date(),
                 )
             ),
+            onCommentItemClicked = {},
             navigateToCommentList = {}
         )
     }

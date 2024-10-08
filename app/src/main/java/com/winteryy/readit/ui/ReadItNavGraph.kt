@@ -33,7 +33,11 @@ fun ReadItNavGraph(
         }
         composable(
             route = ReadItDestinations.COMMENT_ROUTE,
-        ) { CommentRoute() }
+        ) {
+            CommentRoute(
+                navigateToEditComment = { navActions.navigateToEditComment(it) }
+            )
+        }
         composable(
             route = ReadItDestinations.MY_PAGE_ROUTE,
         ) { MyPageScreen() }

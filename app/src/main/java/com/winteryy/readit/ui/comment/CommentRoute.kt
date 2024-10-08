@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun CommentRoute(
+    navigateToEditComment: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val commentViewModel: CommentViewModel = hiltViewModel()
@@ -18,14 +19,16 @@ fun CommentRoute(
             is CommentUiState.CommentListState -> {
                 CommentListScreen(
                     booksHavingCommentPagingDataFlow = curState.booksHavingCommentPagingDataFlow,
-                    navigateToCommentMain = { commentViewModel.setCommentMainState() }
+                    navigateToCommentMain = { commentViewModel.setCommentMainState() },
+                    onCommentItemClicked = { navigateToEditComment(it.isbn) }
                 )
             }
             is CommentUiState.CommentMainState -> {
                 CommentMainScreen(
                     commentNum = curState.commentNum,
                     recentCommentList = curState.recentCommentWithBookList,
-                    navigateToCommentList = { commentViewModel.setCommentListState() }
+                    navigateToCommentList = { commentViewModel.setCommentListState() },
+                    onCommentItemClicked = { navigateToEditComment(it) }
                 )
             }
             CommentUiState.FailState -> {

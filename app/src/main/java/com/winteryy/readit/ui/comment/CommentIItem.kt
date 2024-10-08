@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui.comment
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,12 +30,14 @@ import java.util.Date
 fun CommentItem(
     book: Book,
     comment: Comment,
+    onRecentCommentClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(
         modifier = modifier
             .width(360.dp)
-            .clip(RoundedCornerShape(10.dp)),
+            .clip(RoundedCornerShape(10.dp))
+            .clickable { onRecentCommentClicked(book.isbn) },
         color = theme_grey_whiteSmoke
     ) {
         ConstraintLayout(
@@ -100,7 +103,8 @@ fun CommentItemPreview() {
                 "내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. ",
                 Date(),
                 "123214125215"
-            )
+            ),
+            onRecentCommentClicked = {}
         )
     }
 }
