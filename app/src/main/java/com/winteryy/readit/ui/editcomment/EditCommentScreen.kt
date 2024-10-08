@@ -2,6 +2,7 @@ package com.winteryy.readit.ui.editcomment
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
@@ -64,6 +65,7 @@ fun EditCommentScreen(
             ),
             modifier = Modifier
                 .fillMaxHeight()
+                .fillMaxWidth()
                 .onFocusChanged { focusState ->
                     if(focusState.isFocused) {
                         editCommentViewModel.toggleEditing()

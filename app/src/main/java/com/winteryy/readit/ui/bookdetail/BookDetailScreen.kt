@@ -28,7 +28,8 @@ import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 fun BookDetailScreen(
     book: Book?,
     modifier: Modifier = Modifier,
-    onBackArrowClicked: () -> Unit = {}
+    onBackArrowClicked: () -> Unit = {},
+    onCommentButtonClicked: (String) -> Unit = {}
 ) {
     val bookDetailViewModel: BookDetailViewModel = hiltViewModel()
     val bookDetailUiState by bookDetailViewModel.uiState.collectAsStateWithLifecycle()
@@ -64,10 +65,14 @@ fun BookDetailScreen(
                         BookActionPanel(
                             state.book.rating,
                             state.book.bookSaveStatus,
-                            false,
+                            state.hasComment,
                             onRatingChanged = { bookDetailViewModel.setRating(it) },
                             onWishButtonClicked = { bookDetailViewModel.toggleWishBook() },
                             onReadingButtonClicked = { bookDetailViewModel.toggleReadingBook() },
+                            onCommentButtonClicked = {
+                                bookDetailViewModel.insertBeforeComment()
+                                onCommentButtonClicked(state.book.isbn)
+                            }
                         )
                         Spacer(modifier = Modifier.size(12.dp))
                         TitleAndText(

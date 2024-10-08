@@ -118,4 +118,12 @@ class BookDetailViewModel @Inject constructor(
             )
         }
     }
+
+    fun insertBeforeComment() = viewModelScope.launch {
+        val capturedState = _uiState.value
+
+        if(capturedState is BookDetailUiState.Success) {
+            bookStorageRepository.setBook(capturedState.book)
+        }
+    }
 }

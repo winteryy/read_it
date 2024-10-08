@@ -113,14 +113,18 @@ fun CommentListScreen(
     val lazyPagingBooksHavingComment = booksHavingCommentPagingDataFlow.collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
 
-    TextTopBar(
-        title = "코멘트를 작성한 책",
-        onBackArrowClicked = navigateToCommentMain
-    )
-    BookListColumn(
-        lazyPagingBooks = lazyPagingBooksHavingComment,
-        lazyListState = lazyListState
-    )
+    Column(
+        modifier = modifier
+    ) {
+        TextTopBar(
+            title = "코멘트를 작성한 책",
+            onBackArrowClicked = navigateToCommentMain
+        )
+        BookListColumn(
+            lazyPagingBooks = lazyPagingBooksHavingComment,
+            lazyListState = lazyListState
+        )
+    }
 }
 
 @Composable

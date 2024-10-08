@@ -42,7 +42,8 @@ fun ReadItNavGraph(
         ) { backStackEntry ->
             BookDetailScreen(
                 book = backStackEntry.savedStateHandle.get<Book>("book"),
-                onBackArrowClicked = { navController.popBackStack() }
+                onBackArrowClicked = { navController.popBackStack() },
+                onCommentButtonClicked = navActions.navigateToEditComment
             )
         }
         composable(
