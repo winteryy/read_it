@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -29,7 +31,7 @@ fun ReadItApp() {
     Scaffold(
         bottomBar = { MainBottomNavigationBar(navController, navActions) },
         modifier = Modifier
-            .imePadding()
+            .imePadding(),
     ) { paddingValues ->
         ReadItNavGraph(
             navActions,
@@ -49,7 +51,7 @@ fun MainBottomNavigationBar(
     val bottomNavigationItems = listOf(
         ReadItNavigationItem.Main,
         ReadItNavigationItem.Comment,
-        ReadItNavigationItem.MyPage
+//        ReadItNavigationItem.MyPage
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -66,7 +68,7 @@ fun MainBottomNavigationBar(
                         when (item.route) {
                             ReadItDestinations.HOME_ROUTE -> navActions.navigateToHome()
                             ReadItDestinations.COMMENT_ROUTE -> navActions.navigateToComment()
-                            ReadItDestinations.MY_PAGE_ROUTE -> navActions.navigateToMyPage()
+//                            ReadItDestinations.MY_PAGE_ROUTE -> navActions.navigateToMyPage()
                         }
                     },
                     icon = { Icon(imageVector = item.icon, contentDescription = item.label) },

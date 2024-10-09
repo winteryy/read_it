@@ -1,7 +1,9 @@
 package com.winteryy.readit.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,6 +26,7 @@ fun ReadItNavGraph(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier
+            .background(Color.White)
     ) {
         composable(
             route = ReadItDestinations.HOME_ROUTE,
