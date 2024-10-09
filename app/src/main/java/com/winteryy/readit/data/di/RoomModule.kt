@@ -29,4 +29,7 @@ object RoomModule {
 
     @Provides
     fun provideBookDao(readItDatabase: ReadItDatabase) = readItDatabase.bookDao()
+
+    @Provides
+    fun provideCommentDao(readItDatabase: ReadItDatabase) = readItDatabase.commentDao()
 }

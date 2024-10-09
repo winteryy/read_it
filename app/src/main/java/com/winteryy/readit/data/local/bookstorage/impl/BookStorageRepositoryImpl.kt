@@ -218,6 +218,28 @@ class BookStorageRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getBooksHavingCommentPagingFlow(): Result<Flow<PagingData<Book>>> {
+        return try {
+            Result.Success(
+                Pager(
+                    config = PagingConfig(
+                        pageSize = PAGE_SIZE,
+                        enablePlaceholders = false,
+                        maxSize = PAGE_SIZE * 3
+                    ),
+                    pagingSourceFactory = { bookDao.getBooksHavingCommentPaging() }
+                ).flow
+                    .map { pagingData ->
+                        pagingData.map { it.toBook() }
+                    }
+            )
+        } catch (e: Exception) {
+            Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
+        }
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
     }

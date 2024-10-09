@@ -1,9 +1,11 @@
 package com.winteryy.readit.ui.comment
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,45 +21,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.winteryy.readit.model.Book
+import com.winteryy.readit.model.Comment
+import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
+import kotlinx.coroutines.flow.Flow
 import java.util.Date
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CommentMainScreen() {
-    val bookList = listOf(
-        Book(
-            "정의란 무엇인가",
-            "https://picsum.photos/300/400",
-            "test author",
-            "test publisher",
-            "1321412",
-            description = "asdasd",
-            pubDate = Date(),
-        ),
-        Book(
-            "정의란 무엇인가",
-            "https://picsum.photos/300/400",
-            "test author",
-            "test publisher",
-            "1321412",
-            description = "asdasd",
-            pubDate = Date(),
-        )
-    )
+fun CommentMainScreen(
+    commentNum: Int,
+    recentCommentList: List<Pair<Comment, Book>>,
+    navigateToCommentList: () -> Unit,
+    onCommentItemClicked: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    //todo 코멘트 0건일 때 처리
 
     val pagerState = rememberPagerState() {
-        2
+        recentCommentList.size
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(DEFAULT_PADDING)
     ) {
         Text(
@@ -72,7 +66,9 @@ fun CommentMainScreen() {
                 .padding(top = DEFAULT_PADDING),
         ) { page ->
             CommentItem(
-                book = bookList[page],
+                book = recentCommentList[page].second,
+                comment = recentCommentList[page].first,
+                onRecentCommentClicked = onCommentItemClicked,
                 modifier = Modifier
                     .fillMaxWidth()
             )
@@ -82,7 +78,8 @@ fun CommentMainScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = DEFAULT_PADDING)
-                .clip(RoundedCornerShape(10.dp)),
+                .clip(RoundedCornerShape(10.dp))
+                .clickable { navigateToCommentList() },
             color = theme_grey_whiteSmoke
         ) {
             Text(
@@ -93,7 +90,7 @@ fun CommentMainScreen() {
                             color = theme_color_lightDodgerBlue
                         )
                     ) {
-                        append("24")
+                        append(commentNum.toString())
                     }
                     append("권의 책에 코멘트를 작성했어요!")
                 },
@@ -110,28 +107,62 @@ fun CommentMainScreen() {
 }
 
 @Composable
-fun CommentListScreen() {
-    TextTopBar(
-        title = "코멘트를 작성한 책"
-    )
-//    BookListColumn(
-//        lazyPagingBooks = ,
-//        lazyListState =
-//    )
+fun CommentListScreen(
+    booksHavingCommentPagingDataFlow: Flow<PagingData<Book>>,
+    navigateToCommentMain: () -> Unit,
+    onCommentItemClicked: (Book) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val lazyPagingBooksHavingComment = booksHavingCommentPagingDataFlow.collectAsLazyPagingItems()
+    val lazyListState = rememberLazyListState()
+
+    Column(
+        modifier = modifier
+    ) {
+        TextTopBar(
+            title = "코멘트를 작성한 책",
+            onBackArrowClicked = navigateToCommentMain
+        )
+        BookListColumn(
+            lazyPagingBooks = lazyPagingBooksHavingComment,
+            lazyListState = lazyListState,
+            onItemClicked = onCommentItemClicked
+        )
+    }
 }
 
 @Composable
 @Preview(showBackground = true)
 fun CommentMainScreenPreview() {
     ReadItTheme {
-        CommentMainScreen()
+        CommentMainScreen(
+            commentNum = 1,
+            recentCommentList = listOf(
+                Comment(
+                    1,
+                    "내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. 내용 확인용 텍스트입니다. ",
+                    Date(),
+                    "123214125215"
+                ) to Book(
+                    "정의란 무엇인가",
+                    "https://picsum.photos/300/400",
+                    "test author",
+                    "test publisher",
+                    "1321412",
+                    description = "asdasd",
+                    pubDate = Date(),
+                )
+            ),
+            onCommentItemClicked = {},
+            navigateToCommentList = {}
+        )
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun CommentListScreenPreview() {
-    ReadItTheme {
-        CommentListScreen()
-    }
-}
+//@Composable
+//@Preview(showBackground = true)
+//fun CommentListScreenPreview() {
+//    ReadItTheme {
+//        CommentListScreen()
+//    }
+//}

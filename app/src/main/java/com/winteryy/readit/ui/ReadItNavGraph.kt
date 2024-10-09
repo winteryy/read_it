@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.ui.bookdetail.BookDetailScreen
 import com.winteryy.readit.ui.comment.CommentRoute
+import com.winteryy.readit.ui.editcomment.EditCommentScreen
 import com.winteryy.readit.ui.home.HomeRoute
 import com.winteryy.readit.ui.mypage.MyPageScreen
 
@@ -32,18 +33,30 @@ fun ReadItNavGraph(
         }
         composable(
             route = ReadItDestinations.COMMENT_ROUTE,
-        ) { CommentRoute() }
+        ) {
+            CommentRoute(
+                navigateToEditComment = { navActions.navigateToEditComment(it) }
+            )
+        }
         composable(
             route = ReadItDestinations.MY_PAGE_ROUTE,
         ) { MyPageScreen() }
         composable(
             route = ReadItDestinations.BOOK_DETAIL_ROUTE,
         ) { backStackEntry ->
-                BookDetailScreen(
-                    book = backStackEntry.savedStateHandle.get<Book>("book"),
-                    onBackArrowClicked = { navController.popBackStack() }
-                )
-
+            BookDetailScreen(
+                book = backStackEntry.savedStateHandle.get<Book>("book"),
+                onBackArrowClicked = { navController.popBackStack() },
+                onCommentButtonClicked = navActions.navigateToEditComment
+            )
+        }
+        composable(
+            route = ReadItDestinations.EDIT_COMMENT_ROUTE,
+        ) { backStackEntry ->
+            EditCommentScreen(
+                isbn = backStackEntry.savedStateHandle.get<String>("isbn") ?: "",
+                onBackArrowClicked = { navController.popBackStack() }
+            )
         }
     }
 }

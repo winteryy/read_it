@@ -1,12 +1,11 @@
 package com.winteryy.readit.data.local.bookstorage
 
-import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.winteryy.readit.model.Book
+import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -40,4 +39,8 @@ interface BookDao {
 
     @Query("DELETE FROM books WHERE isbn=:isbn")
     suspend fun deleteBookByIsbn(isbn: String)
+
+    @Transaction
+    @Query("SELECT books.* FROM books INNER JOIN comments ON books.isbn = comments.bookIsbn ORDER BY comments.updateDate DESC")
+    fun getBooksHavingCommentPaging(): PagingSource<Int, BookEntity>
 }
