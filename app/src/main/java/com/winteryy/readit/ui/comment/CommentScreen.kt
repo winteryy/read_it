@@ -51,7 +51,7 @@ fun CommentMainScreen(
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(DEFAULT_PADDING)
     ) {
         Text(

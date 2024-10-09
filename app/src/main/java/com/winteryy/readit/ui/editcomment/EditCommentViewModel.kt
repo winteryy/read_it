@@ -77,4 +77,9 @@ class EditCommentViewModel @Inject constructor(
         )
     }
 
+    fun deleteComment() = viewModelScope.launch {
+        _uiState.value.comment?.let { comment ->
+            commentStorageRepository.deleteCommentById(comment.id)
+        }
+    }
 }

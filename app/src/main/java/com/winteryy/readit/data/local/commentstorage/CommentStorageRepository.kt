@@ -15,4 +15,5 @@ interface CommentStorageRepository {
     fun getCommentsWithBooksPagingFlow(): Result<Flow<PagingData<Pair<Comment, Book>>>>
     fun getCommentNum(): Flow<Result<Int>>
     fun getCommentByIsbn(isbn: String): Flow<Result<Comment>>
+    suspend fun deleteCommentById(id: Long): Result<Unit>
 }

@@ -49,8 +49,12 @@ fun EditCommentScreen(
             backButtonImageVector = Icons.Filled.Close,
             trailingText = if(editCommentUiState.isEditing) "완료" else "삭제",
             trailingTextCallback = {
-                if(editCommentUiState.isEditing) editCommentViewModel.saveComment()
-                else editCommentViewModel.toggleEditing()
+                if(editCommentUiState.isEditing) {
+                    editCommentViewModel.saveComment()
+                } else {
+                    editCommentViewModel.deleteComment()
+                    onBackArrowClicked()
+                }
             }
         )
 

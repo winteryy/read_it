@@ -140,6 +140,17 @@ class CommentStorageRepositoryImpl @Inject constructor(
             }
     }
 
+    override suspend fun deleteCommentById(id: Long): Result<Unit> {
+        try {
+            commentDao.deleteCommentById(id)
+            return Result.Success(Unit)
+        } catch (e: Exception) {
+            return Result.Error(
+                LocalError.LocalDbError(e.message)
+            )
+        }
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
     }

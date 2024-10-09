@@ -34,4 +34,7 @@ interface CommentDao {
     @Query("SELECT * FROM comments WHERE bookIsbn = :isbn")
     fun getCommentByIsbn(isbn: String): Flow<CommentEntity?>
 
+    @Query("DELETE FROM comments WHERE id = :id")
+    suspend fun deleteCommentById(id: Long)
+
 }
