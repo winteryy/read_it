@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
@@ -22,19 +23,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.model.SectionType
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
+import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
+import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 import java.util.Date
 
 @Composable
 fun SectionItem(
     section: Section,
     modifier: Modifier = Modifier,
+    itemWidth: Dp? = null,
     onArrowClicked: (Section) -> Unit = {},
     onItemClicked: (Book) -> Unit = {}
 ) {
@@ -69,18 +75,46 @@ fun SectionItem(
                     }
                 )
             }
-            LazyRow(state = lazyRowState) {
-                itemsIndexed(
-                    items = section.bookList,
-                    key = { _, book -> book.isbn }
-                ) { ind, book ->
-                    if(ind!=0) Spacer(modifier = Modifier.size(8.dp))
-                    BookItem(
-                        book = book,
-                        onClick = onItemClicked
+
+            if(section.bookList.isNotEmpty()) {
+                LazyRow(state = lazyRowState) {
+                    itemsIndexed(
+                        items = section.bookList,
+                        key = { _, book -> book.isbn }
+                    ) { ind, book ->
+                        if(ind!=0) Spacer(modifier = Modifier.size(8.dp))
+                        if(itemWidth!=null) {
+                            BookItem(
+                                book = book,
+                                bookWidth = itemWidth,
+                                onClick = onItemClicked
+                            )
+                        } else {
+                            BookItem(
+                                book = book,
+                                onClick = onItemClicked
+                            )
+                        }
+                    }
+                }
+            } else {
+                Surface(
+                    color = theme_grey_whiteSmoke,
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = section.emptyMsg?:"등록된 책이 없습니다.\n책을 추가해보세요.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = itemWidth ?: (140.dp / 4 * 3 + 2.dp))
                     )
                 }
+
             }
+
         }
     }
 

@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.winteryy.readit.model.Book
@@ -28,11 +29,12 @@ private val BOOK_WIDTH = 140.dp
 fun BookItem(
     book: Book,
     modifier: Modifier = Modifier,
+    bookWidth: Dp = BOOK_WIDTH,
     onClick: ((Book) -> Unit)? = null
 ) {
     Column(
         modifier = modifier
-            .width(BOOK_WIDTH)
+            .width(bookWidth)
             .let { originModifier ->
                 onClick?.let { action ->
                     originModifier.clickable {
@@ -46,7 +48,7 @@ fun BookItem(
             contentDescription = book.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .size(BOOK_WIDTH, 210.dp)
+                .size(bookWidth, bookWidth/2*3)
                 .clip(RoundedCornerShape(10.dp))
         )
         Spacer(modifier = Modifier.size(4.dp))

@@ -40,6 +40,7 @@ fun HomeFeedScreen(
             Spacer(modifier = Modifier.size(16.dp))
             SectionItem(
                 section = section,
+                itemWidth = 100.dp,
                 onArrowClicked = onSectionArrowClicked,
                 onItemClicked = onSectionItemClicked
             )

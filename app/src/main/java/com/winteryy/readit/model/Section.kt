@@ -2,7 +2,8 @@ package com.winteryy.readit.model
 
 data class Section(
     val sectionType: SectionType,
-    val bookList: List<Book>
+    val bookList: List<Book>,
+    val emptyMsg: String? = null
 )
 
 sealed interface SectionType {

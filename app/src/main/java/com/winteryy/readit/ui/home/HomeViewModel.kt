@@ -37,10 +37,20 @@ class HomeViewModel @Inject constructor(
     ) { readingBooksResult, wishBooksResult, ratedBooksResult ->
 
         listOf(
-            createSectionFromBooksResult(SectionType.READING, readingBooksResult),
-            createSectionFromBooksResult(SectionType.WISH, wishBooksResult),
-            createSectionFromBooksResult(SectionType.RATED, ratedBooksResult)
-
+            createSectionFromBooksResult(
+                sectionType = SectionType.READING,
+                result = readingBooksResult,
+                emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
+            ),
+            createSectionFromBooksResult(
+                sectionType = SectionType.WISH,
+                result = wishBooksResult,
+                emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
+            ),
+            createSectionFromBooksResult(
+                sectionType = SectionType.RATED,
+                result = ratedBooksResult,
+                emptyMsg = "평가한 책이 없습니다.\n읽은 책을 평가해주세요.")
         )
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
@@ -50,9 +60,9 @@ class HomeViewModel @Inject constructor(
         setFeedScreen()
     }
 
-    private fun createSectionFromBooksResult(sectionType: SectionType, result: Result<List<Book>>): Section {
+    private fun createSectionFromBooksResult(sectionType: SectionType, result: Result<List<Book>>, emptyMsg: String? = null): Section {
         return when(result) {
-            is Result.Success -> Section(sectionType, result.data)
+            is Result.Success -> Section(sectionType, result.data, emptyMsg)
             is Result.Error -> Section(sectionType, emptyList())
         }
     }
