@@ -33,6 +33,8 @@ import com.winteryy.readit.model.SectionType
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
+import com.winteryy.readit.ui.theme.theme_color_malibu
+import com.winteryy.readit.ui.theme.theme_color_malibu_light
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 import java.util.Date
 
@@ -67,13 +69,16 @@ fun SectionItem(
                         fontWeight = FontWeight.Bold
                     ),
                 )
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "show all button",
-                    modifier = Modifier.clickable {
-                        onArrowClicked(section)
-                    }
-                )
+                if(section.bookList.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                        contentDescription = "show all button",
+                        modifier = Modifier
+                            .clickable {
+                                onArrowClicked(section)
+                            }
+                    )
+                }
             }
 
             if(section.bookList.isNotEmpty()) {
@@ -99,7 +104,7 @@ fun SectionItem(
                 }
             } else {
                 Surface(
-                    color = theme_grey_whiteSmoke,
+                    color = theme_color_malibu_light,
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(

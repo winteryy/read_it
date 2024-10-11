@@ -28,6 +28,8 @@ fun EditCommentScreen(
     onBackArrowClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    //todo 한 번 클릭했을 때 바로 편집모드로 안 바뀌는 문제
     val editCommentViewModel: EditCommentViewModel = hiltViewModel()
     val editCommentUiState by editCommentViewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current

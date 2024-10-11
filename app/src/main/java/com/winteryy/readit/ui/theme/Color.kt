@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.Color
 val theme_color_dodgerBlue = Color(0xFF0583F2)
 val theme_color_lightDodgerBlue = Color(0xFF0597F2)
 val theme_color_malibu = Color(0xFF57B7F2)
+val theme_color_malibu_light = Color(0xFFC8D9F6)
 
 val theme_grey_black = Color(0xFF000000)
 val theme_grey_gunPowder = Color(0xFF565659)

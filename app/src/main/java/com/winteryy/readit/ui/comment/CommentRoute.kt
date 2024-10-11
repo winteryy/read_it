@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui.comment
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,7 +21,8 @@ fun CommentRoute(
                 CommentListScreen(
                     booksHavingCommentPagingDataFlow = curState.booksHavingCommentPagingDataFlow,
                     navigateToCommentMain = { commentViewModel.setCommentMainState() },
-                    onCommentItemClicked = { navigateToEditComment(it.isbn) }
+                    onCommentItemClicked = { navigateToEditComment(it.isbn) },
+                    modifier = modifier
                 )
             }
             is CommentUiState.CommentMainState -> {
@@ -28,7 +30,8 @@ fun CommentRoute(
                     commentNum = curState.commentNum,
                     recentCommentList = curState.recentCommentWithBookList,
                     navigateToCommentList = { commentViewModel.setCommentListState() },
-                    onCommentItemClicked = { navigateToEditComment(it) }
+                    onCommentItemClicked = { navigateToEditComment(it) },
+                    modifier = modifier,
                 )
             }
             CommentUiState.FailState -> {
