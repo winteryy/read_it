@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,13 +49,19 @@ import java.util.Date
 @Composable
 fun CommentMainScreen(
     commentNum: Int,
+    curPage: Int,
     recentCommentList: List<Pair<Comment, Book>>,
     navigateToCommentList: () -> Unit,
     onCommentItemClicked: (String) -> Unit,
+    onPageChanged: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     //todo uiState 변화 및 composition에 따른 State 초기화 문제
-    val pagerState = rememberPagerState { recentCommentList.size }
+    val pagerState = rememberPagerState(initialPage = curPage) { recentCommentList.size }
+
+    LaunchedEffect(pagerState.currentPage) {
+        onPageChanged(pagerState.currentPage)
+    }
 
     Column(
         modifier = modifier
@@ -194,7 +201,9 @@ fun CommentMainScreenPreview() {
                 )
             ),
             onCommentItemClicked = {},
-            navigateToCommentList = {}
+            navigateToCommentList = {},
+            onPageChanged = {},
+            curPage = 0
         )
     }
 }

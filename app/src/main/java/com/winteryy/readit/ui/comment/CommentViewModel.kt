@@ -8,10 +8,12 @@ import com.winteryy.readit.data.local.commentstorage.CommentStorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +26,26 @@ class CommentViewModel @Inject constructor(
         MutableStateFlow(CommentUiState.Loading)
     val commentUiState: StateFlow<CommentUiState> get() = _commentUiState.asStateFlow()
 
+    private var curPage: Int = 0
+
+    private val mainState: StateFlow<CommentUiState> = commentStorageRepository.getRecentComments()
+        .combine(commentStorageRepository.getCommentNum()) { recentCommentWithBookList, commentNum ->
+            curPage = 0
+            if (recentCommentWithBookList is Result.Success && commentNum is Result.Success) {
+                CommentUiState.CommentMainState(
+                    commentNum = commentNum.data,
+                    recentCommentWithBookList = recentCommentWithBookList.data
+                )
+            } else {
+                CommentUiState.FailState
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = CommentUiState.Loading
+        )
+
     private var currentJob: Job? = null
 
     init {
@@ -34,20 +56,15 @@ class CommentViewModel @Inject constructor(
         currentJob?.cancel()
 
         currentJob = viewModelScope.launch {
-            commentStorageRepository.getRecentComments()
-                .combine(commentStorageRepository.getCommentNum()) { recentCommentWithBookList, commentNum ->
-                    if (recentCommentWithBookList is Result.Success && commentNum is Result.Success) {
-                        CommentUiState.CommentMainState(
-                            commentNum.data,
-                            recentCommentWithBookList.data
-                        )
-                    } else {
-                        CommentUiState.FailState
-                    }
+            mainState.collectLatest { state ->
+                _commentUiState.value = if(state is CommentUiState.CommentMainState) {
+                    state.copy(
+                        curPage = curPage
+                    )
+                } else {
+                    state
                 }
-                .collectLatest { state ->
-                    _commentUiState.value = state
-                }
+            }
         }
     }
 
@@ -67,5 +84,9 @@ class CommentViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun updateCurPage(page: Int) {
+        curPage = page
     }
 }
