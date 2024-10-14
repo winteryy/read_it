@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.winteryy.readit.model.Book
+import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
 
 @Composable
 fun HomeRoute(
@@ -42,26 +43,30 @@ fun HomeRoute(
 
             HorizontalDivider()
 
-            when(curState) {
-                is HomeUiState.FeedState -> {
-                    HomeFeedScreen(
-                        sectionList = curState.sectionList,
-                        sectionLazyListState = sectionLazyListState,
-                        onSectionArrowClicked = { homeViewModel.setSectionDetailScreen(it) },
-                        onSectionItemClicked = navigateToBookDetail
+            if(curState.isLoading) {
+                IndeterminateCircularIndicator()
+            } else {
+                when(curState) {
+                    is HomeUiState.FeedState -> {
+                        HomeFeedScreen(
+                            sectionList = curState.sectionList,
+                            sectionLazyListState = sectionLazyListState,
+                            onSectionArrowClicked = { homeViewModel.setSectionDetailScreen(it) },
+                            onSectionItemClicked = navigateToBookDetail
+                        )
+                    }
+                    is HomeUiState.SearchState -> HomeSearchScreen()
+                    is HomeUiState.SearchResultState -> {
+                        HomeSearchResultScreen(
+                            bookPagingDataFlow = curState.bookPagingDataFlow,
+                            onResultItemClicked = navigateToBookDetail
+                        )
+                    }
+                    is HomeUiState.SectionDetailState -> HomeSectionDetailScreen(
+                        bookPagingDataFlow = curState.sectionBookPagingDataFlow,
+                        onBookItemClicked = navigateToBookDetail
                     )
                 }
-                is HomeUiState.SearchState -> HomeSearchScreen()
-                is HomeUiState.SearchResultState -> {
-                    HomeSearchResultScreen(
-                        bookPagingDataFlow = curState.bookPagingDataFlow,
-                        onResultItemClicked = navigateToBookDetail
-                    )
-                }
-                is HomeUiState.SectionDetailState -> HomeSectionDetailScreen(
-                    bookPagingDataFlow = curState.sectionBookPagingDataFlow,
-                    onBookItemClicked = navigateToBookDetail
-                )
             }
         }
 

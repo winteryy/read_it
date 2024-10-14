@@ -27,7 +27,13 @@ class HomeViewModel @Inject constructor(
     private val bookStorageRepository: BookStorageRepository
 ): ViewModel() {
 
-    private val _homeUiState = MutableStateFlow<HomeUiState>(HomeUiState.FeedState(emptyList()))
+    private val _homeUiState = MutableStateFlow<HomeUiState>(
+        HomeUiState.FeedState(
+            sectionList = emptyList(),
+            isLoading = true,
+            errorMessage = null
+        )
+    )
     val homeUiState: StateFlow<HomeUiState> get() = _homeUiState.asStateFlow()
 
     private val homeFeedSectionList: StateFlow<List<Section>> = combine(
@@ -35,23 +41,26 @@ class HomeViewModel @Inject constructor(
         bookStorageRepository.getWishBooks(),
         bookStorageRepository.getRatedBooks()
     ) { readingBooksResult, wishBooksResult, ratedBooksResult ->
-
-        listOf(
-            createSectionFromBooksResult(
-                sectionType = SectionType.READING,
-                result = readingBooksResult,
-                emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
-            ),
-            createSectionFromBooksResult(
-                sectionType = SectionType.WISH,
-                result = wishBooksResult,
-                emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
-            ),
-            createSectionFromBooksResult(
-                sectionType = SectionType.RATED,
-                result = ratedBooksResult,
-                emptyMsg = "평가한 책이 없습니다.\n읽은 책을 평가해주세요.")
-        )
+        if(readingBooksResult is Result.Error || wishBooksResult is Result.Error || ratedBooksResult is Result.Error) {
+            emptyList()
+        } else {
+            listOf(
+                createSectionFromBooksResult(
+                    sectionType = SectionType.READING,
+                    result = readingBooksResult,
+                    emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
+                ),
+                createSectionFromBooksResult(
+                    sectionType = SectionType.WISH,
+                    result = wishBooksResult,
+                    emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
+                ),
+                createSectionFromBooksResult(
+                    sectionType = SectionType.RATED,
+                    result = ratedBooksResult,
+                    emptyMsg = "평가한 책이 없습니다.\n읽은 책을 평가해주세요.")
+            )
+        }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private var feedJob: Job? = null
@@ -72,7 +81,15 @@ class HomeViewModel @Inject constructor(
 
         feedJob = viewModelScope.launch {
             homeFeedSectionList.collectLatest { sectionList ->
-                _homeUiState.update { HomeUiState.FeedState(sectionList) }
+                if(sectionList.isNotEmpty()) {
+                    _homeUiState.update { HomeUiState.FeedState(
+                        sectionList = sectionList,
+                        isLoading = false,
+                        errorMessage = null
+                    ) }
+                } else {
+                    setErrorMessage("책 정보를 정상적으로 불러올 수 없습니다.")
+                }
             }
         }
     }
@@ -82,7 +99,10 @@ class HomeViewModel @Inject constructor(
 
         if(homeUiState.value !is HomeUiState.SearchResultState) {
             _homeUiState.update {
-                HomeUiState.SearchState()
+                HomeUiState.SearchState(
+                    isLoading = false,
+                    errorMessage = null
+                )
             }
         }
     }
@@ -93,14 +113,17 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setSearchResultScreen(query: String) {
+        setLoading()
         when(val result = searchRepository.getSearchPagingData(query)) {
             is Result.Error -> {
-                //todo 에러 핸들링
+                setErrorMessage(result.exception.message)
             }
             is Result.Success -> {
                 _homeUiState.update {
                     HomeUiState.SearchResultState(
-                        result.data
+                        result.data,
+                        isLoading = false,
+                        errorMessage = null
                     )
                 }
             }
@@ -108,6 +131,8 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setSectionDetailScreen(section: Section) {
+        setLoading()
+
         viewModelScope.launch {
             val result = when(section.sectionType) {
                 SectionType.RATED -> bookStorageRepository.getRatedBooksPagingFlow()
@@ -117,12 +142,35 @@ class HomeViewModel @Inject constructor(
 
             when(result) {
                 is Result.Error -> {
-                    //todo 에러 핸들링
+                    setErrorMessage(result.exception.message)
                 }
                 is Result.Success -> {
-                    _homeUiState.update { HomeUiState.SectionDetailState(result.data, section.sectionType) }
+                    _homeUiState.update { HomeUiState.SectionDetailState(
+                        sectionBookPagingDataFlow = result.data,
+                        sectionType = section.sectionType,
+                        isLoading = false,
+                        errorMessage = null
+                    ) }
                 }
             }
+        }
+    }
+
+    private fun setLoading() {
+        _homeUiState.value = when(val state = _homeUiState.value) {
+            is HomeUiState.FeedState -> state.copy(isLoading = true)
+            is HomeUiState.SearchState -> state.copy(isLoading = true)
+            is HomeUiState.SearchResultState -> state.copy(isLoading = true)
+            is HomeUiState.SectionDetailState -> state.copy(isLoading = true)
+        }
+    }
+
+    private fun setErrorMessage(msg: String) {
+        _homeUiState.value = when(val state = _homeUiState.value) {
+            is HomeUiState.FeedState -> state.copy(isLoading = false, errorMessage = msg)
+            is HomeUiState.SearchState -> state.copy(isLoading = false, errorMessage = msg)
+            is HomeUiState.SearchResultState -> state.copy(isLoading = false, errorMessage = msg)
+            is HomeUiState.SectionDetailState -> state.copy(isLoading = false, errorMessage = msg)
         }
     }
 
