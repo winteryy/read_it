@@ -1,18 +1,18 @@
 package com.winteryy.readit.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -27,17 +27,20 @@ fun ReadItApp() {
     val navActions = remember(navController) {
         ReadItNavigationActions(navController)
     }
+    val snackbarHostState = remember{ SnackbarHostState() }
 
     Scaffold(
         bottomBar = { MainBottomNavigationBar(navController, navActions) },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = Modifier
             .imePadding(),
     ) { paddingValues ->
         ReadItNavGraph(
-            navActions,
-            Modifier.padding(paddingValues),
-            navController,
-            ReadItDestinations.HOME_ROUTE
+            navActions = navActions,
+            modifier = Modifier.padding(paddingValues),
+            snackbarHostState = snackbarHostState,
+            navController = navController,
+            startDestination = ReadItDestinations.HOME_ROUTE
         )
     }
 

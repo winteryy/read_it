@@ -3,7 +3,9 @@ package com.winteryy.readit.ui.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -14,6 +16,7 @@ import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
 @Composable
 fun HomeRoute(
     navigateToBookDetail: (Book) -> Unit,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
@@ -42,6 +45,13 @@ fun HomeRoute(
             )
 
             HorizontalDivider()
+
+            LaunchedEffect(curState.errorMessage) {
+                curState.errorMessage?.let {
+                    snackbarHostState.showSnackbar(it)
+                    homeViewModel.consumeErrorMessage()
+                }
+            }
 
             if(curState.isLoading) {
                 IndeterminateCircularIndicator()

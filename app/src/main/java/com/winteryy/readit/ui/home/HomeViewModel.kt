@@ -116,9 +116,11 @@ class HomeViewModel @Inject constructor(
         setLoading()
         when(val result = searchRepository.getSearchPagingData(query)) {
             is Result.Error -> {
+                println("error ${result.exception.message}")
                 setErrorMessage(result.exception.message)
             }
             is Result.Success -> {
+                println("success ${result.data}")
                 _homeUiState.update {
                     HomeUiState.SearchResultState(
                         result.data,
@@ -165,13 +167,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun setErrorMessage(msg: String) {
+    private fun setErrorMessage(msg: String?) {
         _homeUiState.value = when(val state = _homeUiState.value) {
             is HomeUiState.FeedState -> state.copy(isLoading = false, errorMessage = msg)
             is HomeUiState.SearchState -> state.copy(isLoading = false, errorMessage = msg)
             is HomeUiState.SearchResultState -> state.copy(isLoading = false, errorMessage = msg)
             is HomeUiState.SectionDetailState -> state.copy(isLoading = false, errorMessage = msg)
         }
+    }
+
+    fun consumeErrorMessage() {
+        setErrorMessage(null)
     }
 
 }

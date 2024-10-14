@@ -1,6 +1,7 @@
 package com.winteryy.readit.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,6 +20,7 @@ import com.winteryy.readit.ui.mypage.MyPageScreen
 fun ReadItNavGraph(
     navActions: ReadItNavigationActions,
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState,
     navController: NavHostController = rememberNavController(),
     startDestination: String = ReadItDestinations.HOME_ROUTE
 ) {
@@ -31,7 +33,8 @@ fun ReadItNavGraph(
         composable(
             route = ReadItDestinations.HOME_ROUTE,
         ) { HomeRoute(
-                navigateToBookDetail = navActions.navigateToBookDetail
+                navigateToBookDetail = navActions.navigateToBookDetail,
+                snackbarHostState = snackbarHostState
             )
         }
         composable(
