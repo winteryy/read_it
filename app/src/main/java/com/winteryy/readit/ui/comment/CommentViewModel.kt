@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class CommentViewModel @Inject constructor(
     private val commentStorageRepository: CommentStorageRepository
 ) : ViewModel() {
     private val _commentUiState: MutableStateFlow<CommentUiState> =
-        MutableStateFlow(CommentUiState.Loading)
+        MutableStateFlow(CommentUiState.CommentMainState(isLoading = true))
     val commentUiState: StateFlow<CommentUiState> get() = _commentUiState.asStateFlow()
 
     private var curPage: Int = 0
@@ -37,13 +38,15 @@ class CommentViewModel @Inject constructor(
                     recentCommentWithBookList = recentCommentWithBookList.data
                 )
             } else {
-                CommentUiState.FailState
+                CommentUiState.CommentMainState(
+                    errorMessage = "저장된 코멘트를 정상적으로 불러오지 못했습니다."
+                )
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
-            initialValue = CommentUiState.Loading
+            initialValue = CommentUiState.CommentMainState(isLoading = true)
         )
 
     private var currentJob: Job? = null
@@ -74,12 +77,15 @@ class CommentViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = bookStorageRepository.getBooksHavingCommentPagingFlow()) {
                 is Result.Error -> {
-                    //todo 에러 핸들링
+                    _commentUiState.value = CommentUiState.CommentListState(
+                        errorMessage = result.exception.message,
+                        booksHavingCommentPagingDataFlow = emptyFlow()
+                    )
                 }
 
                 is Result.Success -> {
                     _commentUiState.value = CommentUiState.CommentListState(
-                        result.data
+                        booksHavingCommentPagingDataFlow = result.data
                     )
                 }
             }
@@ -88,5 +94,16 @@ class CommentViewModel @Inject constructor(
 
     fun updateCurPage(page: Int) {
         curPage = page
+    }
+
+    fun consumeErrorMessage() {
+        _commentUiState.value = when (val state = _commentUiState.value) {
+            is CommentUiState.CommentListState -> {
+                state.copy(errorMessage = null)
+            }
+            is CommentUiState.CommentMainState -> {
+                state.copy(errorMessage = null)
+            }
+        }
     }
 }

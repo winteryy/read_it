@@ -41,6 +41,7 @@ fun ReadItNavGraph(
             route = ReadItDestinations.COMMENT_ROUTE,
         ) {
             CommentRoute(
+                snackbarHostState = snackbarHostState,
                 navigateToEditComment = { navActions.navigateToEditComment(it) }
             )
         }
