@@ -21,7 +21,9 @@ import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
 @Composable
-fun ReadItApp() {
+fun ReadItApp(
+    modifier: Modifier = Modifier
+) {
 
     val navController = rememberNavController()
     val navActions = remember(navController) {
@@ -32,7 +34,7 @@ fun ReadItApp() {
     Scaffold(
         bottomBar = { MainBottomNavigationBar(navController, navActions) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        modifier = Modifier
+        modifier = modifier
             .imePadding(),
     ) { paddingValues ->
         ReadItNavGraph(

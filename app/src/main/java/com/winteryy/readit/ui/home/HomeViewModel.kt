@@ -116,11 +116,9 @@ class HomeViewModel @Inject constructor(
         setLoading()
         when(val result = searchRepository.getSearchPagingData(query)) {
             is Result.Error -> {
-                println("error ${result.exception.message}")
                 setErrorMessage(result.exception.message)
             }
             is Result.Success -> {
-                println("success ${result.data}")
                 _homeUiState.update {
                     HomeUiState.SearchResultState(
                         result.data,

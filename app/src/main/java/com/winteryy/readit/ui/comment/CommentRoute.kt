@@ -15,7 +15,6 @@ fun CommentRoute(
     val commentUiState = commentViewModel.commentUiState.collectAsStateWithLifecycle()
 
     commentUiState.value.let { curState ->
-        println(curState)
         when(curState) {
             is CommentUiState.CommentListState -> {
                 CommentListScreen(

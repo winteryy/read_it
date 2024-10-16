@@ -61,6 +61,7 @@ fun ReadItNavGraph(
         ) { backStackEntry ->
             EditCommentScreen(
                 isbn = backStackEntry.savedStateHandle.get<String>("isbn") ?: "",
+                snackbarHostState = snackbarHostState,
                 onBackArrowClicked = { navController.popBackStack() }
             )
         }

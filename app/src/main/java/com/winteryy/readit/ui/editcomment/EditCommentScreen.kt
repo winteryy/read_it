@@ -1,11 +1,15 @@
 package com.winteryy.readit.ui.editcomment
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -18,74 +22,101 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
+import com.winteryy.readit.ui.theme.theme_grey_black
 
 @Composable
 fun EditCommentScreen(
     isbn: String,
+    snackbarHostState: SnackbarHostState,
     onBackArrowClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    editCommentViewModel: EditCommentViewModel = hiltViewModel()
 ) {
-
     //todo 한 번 클릭했을 때 바로 편집모드로 안 바뀌는 문제
-    val editCommentViewModel: EditCommentViewModel = hiltViewModel()
+    //todo 네비게이션바 숨김 처리
+    //todo 바로 나가기 말고 다이얼로그 처리 필요
     val editCommentUiState by editCommentViewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isbn) {
         editCommentViewModel.initState(isbn)
     }
 
-    if(editCommentUiState.isEditing.not()) {
-        focusManager.clearFocus()
+    LaunchedEffect(Unit) {
+        editCommentViewModel.deleteCompletionEventFlow.collect {
+            onBackArrowClicked()
+        }
     }
 
-    Column(
+    Box(
         modifier = modifier
     ) {
-        TextTopBar(
-            title = "코멘트 작성",
-            onBackArrowClicked = onBackArrowClicked,
-            backButtonImageVector = Icons.Filled.Close,
-            trailingText = if(editCommentUiState.isEditing) "완료" else "삭제",
-            trailingTextCallback = {
-                if(editCommentUiState.isEditing) {
-                    editCommentViewModel.saveComment()
-                } else {
-                    editCommentViewModel.deleteComment()
-                    onBackArrowClicked()
-                }
+        if (editCommentUiState.isEditing.not()) {
+            focusManager.clearFocus()
+        }
+
+        LaunchedEffect(editCommentUiState.errorMessage) {
+            editCommentUiState.errorMessage?.let {
+                snackbarHostState.showSnackbar(it)
+                editCommentViewModel.consumeErrorMessage()
             }
-        )
+        }
 
-        HorizontalDivider()
-
-        TextField(
-            value = editCommentUiState.editingText,
-            textStyle = Typography.bodyMedium,
-            onValueChange = { editCommentViewModel.updateEditingText(it) },
-            colors = TextFieldDefaults.colors().copy(
-                unfocusedContainerColor = Color.White
-            ),
-            modifier = Modifier
-                .fillMaxHeight()
-                .fillMaxWidth()
-                .onFocusChanged { focusState ->
-                    if(focusState.isFocused) {
-                        editCommentViewModel.toggleEditing()
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            TextTopBar(
+                title = "코멘트 작성",
+                onBackArrowClicked = onBackArrowClicked,
+                backButtonImageVector = Icons.Filled.Close,
+                trailingText = if (editCommentUiState.isEditing) "완료" else "삭제",
+                trailingTextCallback = {
+                    if (editCommentUiState.isEditing) {
+                        editCommentViewModel.saveComment()
+                    } else {
+                        editCommentViewModel.deleteComment()
                     }
-                },
-        )
+                }
+            )
+
+            HorizontalDivider()
+
+            TextField(
+                value = editCommentUiState.editingText,
+                textStyle = Typography.bodyMedium,
+                onValueChange = { editCommentViewModel.updateEditingText(it) },
+                colors = TextFieldDefaults.colors().copy(
+                    unfocusedContainerColor = Color.White
+                ),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .onFocusChanged { focusState ->
+                        if (focusState.isFocused) {
+                            editCommentViewModel.toggleEditing()
+                        }
+                    },
+            )
+        }
     }
 
+    if (editCommentUiState.isLoading) {
+        IndeterminateCircularIndicator(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(theme_grey_black.copy(alpha = 0.5f))
+        )
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun EditCommentScreenPreview() {
     ReadItTheme {
-        EditCommentScreen("", {})
+        EditCommentScreen("", SnackbarHostState(), {})
     }
 }
