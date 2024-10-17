@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
@@ -22,109 +23,93 @@ class BookDetailViewModel @Inject constructor(
     private val bookStorageRepository: BookStorageRepository,
     private val commentStorageRepository: CommentStorageRepository
 ): ViewModel() {
-    private val _uiState: MutableStateFlow<BookDetailUiState> = MutableStateFlow(BookDetailUiState.Loading)
+    private val _uiState: MutableStateFlow<BookDetailUiState> = MutableStateFlow(BookDetailUiState(isLoading = true))
     val uiState: StateFlow<BookDetailUiState> get() = _uiState.asStateFlow()
 
     fun initBook(book: Book?) {
+        println(book)
         book?.let {
             viewModelScope.launch {
-                //todo data consistency 문제 있음, map merge 등으로 변경하기
-                launch {
-                    bookStorageRepository.getBookFlowByIsbn(book.isbn).collectLatest { result ->
-                        when(result) {
-                            is Result.Error -> {
-                                if(result.exception is LocalError.NoMatchItemError) {
-                                    _uiState.value = BookDetailUiState.Success(
-                                        book = it,
-                                        hasComment = false
-                                    )
-                                } else {
-                                    _uiState.value = BookDetailUiState.Fail(result.exception.message)
-                                }
-                            }
-                            is Result.Success -> {
-                                updateBook(result.data)
+                bookStorageRepository.getBookFlowByIsbn(book.isbn).combine(
+                    commentStorageRepository.getCommentByIsbn(book.isbn)
+                ) { bookResult, commentResult ->
+                    when(bookResult) {
+                        is Result.Error -> {
+                            if(bookResult.exception is LocalError.NoMatchItemError) {
+                                BookDetailUiState(
+                                    book = it,
+                                    hasComment = false
+                                )
+                            } else {
+                                BookDetailUiState(error = BookDetailUiError.InitFailError)
                             }
                         }
+                        is Result.Success -> {
+                            BookDetailUiState(
+                                book = bookResult.data,
+                                hasComment = commentResult is Result.Success
+                            )
+                        }
                     }
-                }
-                launch {
-                    commentStorageRepository.getCommentByIsbn(book.isbn).collectLatest { result ->
-                        updateCommentState(result is Result.Success)
-                    }
+                }.collectLatest { state ->
+                    _uiState.value = state
                 }
             }
-        } ?: { _uiState.value = BookDetailUiState.Fail("책 정보를 정상적으로 불러오지 못 했습니다.") }
-    }
-
-    private fun updateBook(loadedBook: Book) {
-        _uiState.value = when(val curState = _uiState.value) {
-            is BookDetailUiState.Success -> curState.copy(
-                book = loadedBook
-            )
-            else -> BookDetailUiState.Success(
-                book = loadedBook,
-                hasComment = false
-            )
-        }
-    }
-
-    private fun updateCommentState(hasComment: Boolean) {
-        _uiState.value = when(val curState = _uiState.value) {
-            is BookDetailUiState.Success -> curState.copy(
-                hasComment = hasComment
-            )
-            else -> curState
-        }
+        } ?: { _uiState.value = BookDetailUiState(error = BookDetailUiError.InitFailError) }
     }
 
     fun toggleWishBook() = viewModelScope.launch {
-        val capturedState = _uiState.value
+        val needToClear = _uiState.value.book.bookSaveStatus == BookSaveStatus.WISH
 
-        if(capturedState is BookDetailUiState.Success) {
-            val needToClear = capturedState.book.bookSaveStatus == BookSaveStatus.WISH
-            bookStorageRepository.setBook(
-                book = capturedState.book.copy(
-                    bookSaveStatus = if(needToClear) BookSaveStatus.NONE else BookSaveStatus.WISH,
-                    saveDate = Date()
-                )
+        when(val result = bookStorageRepository.setBook(
+            book = _uiState.value.book.copy(
+                bookSaveStatus = if(needToClear) BookSaveStatus.NONE else BookSaveStatus.WISH,
+                saveDate = Date()
             )
+        )) {
+            is Result.Error -> {
+                _uiState.value = BookDetailUiState(error = BookDetailUiError.QueryError(result.exception.message))
+            }
+            is Result.Success -> { }
         }
     }
 
     fun toggleReadingBook() = viewModelScope.launch {
-        val capturedState = _uiState.value
+        val needToClear = _uiState.value.book.bookSaveStatus == BookSaveStatus.READING
 
-        if(capturedState is BookDetailUiState.Success) {
-            val needToClear = capturedState.book.bookSaveStatus == BookSaveStatus.READING
-            bookStorageRepository.setBook(
-                book = capturedState.book.copy(
-                    bookSaveStatus = if(needToClear) BookSaveStatus.NONE else BookSaveStatus.READING,
-                    saveDate = Date()
-                )
+        when(val result = bookStorageRepository.setBook(
+            book = _uiState.value.book.copy(
+                bookSaveStatus = if(needToClear) BookSaveStatus.NONE else BookSaveStatus.READING,
+                saveDate = Date()
             )
+        )) {
+            is Result.Error -> {
+                _uiState.value = BookDetailUiState(error = BookDetailUiError.QueryError(result.exception.message))
+            }
+            is Result.Success -> { }
         }
     }
 
     fun setRating(rating: Float) = viewModelScope.launch {
-        val capturedState = _uiState.value
-
-        if(capturedState is BookDetailUiState.Success) {
-            bookStorageRepository.setBook(
-                book = capturedState.book.copy(
-                    bookSaveStatus = BookSaveStatus.NONE,
-                    rating = rating,
-                    ratedDate = Date()
-                )
+        when(val result = bookStorageRepository.setBook(
+            book = _uiState.value.book.copy(
+                bookSaveStatus = BookSaveStatus.NONE,
+                rating = rating,
+                ratedDate = Date()
             )
+        )) {
+            is Result.Error -> {
+                _uiState.value = BookDetailUiState(error = BookDetailUiError.QueryError(result.exception.message))
+            }
+            is Result.Success -> { }
         }
     }
 
     fun insertBeforeComment() = viewModelScope.launch {
-        val capturedState = _uiState.value
+        bookStorageRepository.setBook(_uiState.value.book)
+    }
 
-        if(capturedState is BookDetailUiState.Success) {
-            bookStorageRepository.setBook(capturedState.book)
-        }
+    fun consumeError() {
+        _uiState.value = _uiState.value.copy(error = null)
     }
 }

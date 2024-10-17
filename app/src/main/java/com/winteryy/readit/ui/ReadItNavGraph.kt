@@ -53,6 +53,7 @@ fun ReadItNavGraph(
         ) { backStackEntry ->
             BookDetailScreen(
                 book = backStackEntry.savedStateHandle.get<Book>("book"),
+                snackbarHostState = snackbarHostState,
                 onBackArrowClicked = { navController.popBackStack() },
                 onCommentButtonClicked = navActions.navigateToEditComment
             )
