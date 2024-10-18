@@ -2,7 +2,6 @@ package com.winteryy.readit.data.local.commentstorage
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.winteryy.readit.data.local.bookstorage.BookEntity
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.BookSaveStatus
 import com.winteryy.readit.model.Comment
