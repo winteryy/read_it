@@ -36,6 +36,9 @@ import com.winteryy.readit.model.Book
 import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
 import com.winteryy.readit.ui.components.TextTopBar
+import com.winteryy.readit.ui.components.dialog.CustomDialog
+import com.winteryy.readit.ui.components.dialog.DialogButtonInfo
+import com.winteryy.readit.ui.components.dialog.DialogButtonType
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
@@ -166,10 +169,15 @@ fun CommentListScreen(
     modifier: Modifier = Modifier
 ) {
     if(commentListState.errorMessage!=null) {
-        LaunchedEffect(commentListState.errorMessage) {
-            //todo 다이얼로그 처리
-            navigateToCommentMain()
-        }
+        CustomDialog(
+            description = "코멘트 리스트를 불러오는 도중\n오류가 발생했습니다.",
+            buttons = listOf(
+                DialogButtonInfo(
+                    text = "확인",
+                    type = DialogButtonType.FILLED
+                ) { navigateToCommentMain() }
+            )
+        )
     } else {
         val lazyPagingBooksHavingComment = commentListState.booksHavingCommentPagingDataFlow.collectAsLazyPagingItems()
         val lazyListState = rememberLazyListState()
