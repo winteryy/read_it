@@ -11,12 +11,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -40,11 +44,9 @@ fun EditCommentScreen(
     modifier: Modifier = Modifier,
     editCommentViewModel: EditCommentViewModel = hiltViewModel()
 ) {
-    //todo 한 번 클릭했을 때 바로 편집모드로 안 바뀌는 문제
-    //todo 네비게이션바 숨김 처리
-    //todo 바로 나가기 말고 다이얼로그 처리 필요
     val editCommentUiState by editCommentViewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
+    val textFieldFocusRequester = remember { FocusRequester() }
 
     LaunchedEffect(isbn) {
         editCommentViewModel.initState(isbn)
@@ -52,7 +54,14 @@ fun EditCommentScreen(
 
     LaunchedEffect(Unit) {
         editCommentViewModel.deleteCompletionEventFlow.collect {
+            editCommentViewModel.hideDialog()
             onBackArrowClicked()
+        }
+    }
+
+    if(editCommentUiState.isEditing) {
+        LaunchedEffect(Unit) {
+            textFieldFocusRequester.requestFocus()
         }
     }
 
@@ -104,11 +113,13 @@ fun EditCommentScreen(
                 colors = TextFieldDefaults.colors().copy(
                     unfocusedContainerColor = Color.White
                 ),
+                placeholder = { Text(text = "코멘트를 입력해주세요.") },
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth()
+                    .focusRequester(textFieldFocusRequester)
                     .onFocusChanged { focusState ->
-                        if (focusState.isFocused) {
+                        if (focusState.isFocused && !editCommentUiState.isEditing) {
                             editCommentViewModel.toggleEditing()
                         }
                     },
@@ -124,7 +135,10 @@ fun EditCommentScreen(
                     DialogButtonInfo(
                         text = "확인",
                         type = DialogButtonType.FILLED,
-                    ) { onBackArrowClicked() },
+                    ) {
+                        editCommentViewModel.hideDialog()
+                        onBackArrowClicked()
+                      },
                     DialogButtonInfo(
                         text = "취소",
                         type = DialogButtonType.OUTLINED

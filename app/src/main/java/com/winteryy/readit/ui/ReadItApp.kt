@@ -62,25 +62,30 @@ fun MainBottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: ReadItDestinations.HOME_ROUTE
 
-    if(currentRoute != ReadItDestinations.BOOK_DETAIL_ROUTE) {
-        NavigationBar(
-            containerColor = theme_grey_whiteSmoke,
-        ) {
-            bottomNavigationItems.forEach { item ->
-                NavigationBarItem(
-                    selected = currentRoute == item.route,
-                    onClick = {
-                        when (item.route) {
-                            ReadItDestinations.HOME_ROUTE -> navActions.navigateToHome()
-                            ReadItDestinations.COMMENT_ROUTE -> navActions.navigateToComment()
-//                            ReadItDestinations.MY_PAGE_ROUTE -> navActions.navigateToMyPage()
-                        }
-                    },
-                    icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                    label = { Text(text = item.label) }
-                )
-            }
+    when(currentRoute) {
+        ReadItDestinations.BOOK_DETAIL_ROUTE, ReadItDestinations.EDIT_COMMENT_ROUTE -> {
 
+        }
+        else -> {
+            NavigationBar(
+                containerColor = theme_grey_whiteSmoke,
+            ) {
+                bottomNavigationItems.forEach { item ->
+                    NavigationBarItem(
+                        selected = currentRoute == item.route,
+                        onClick = {
+                            when (item.route) {
+                                ReadItDestinations.HOME_ROUTE -> navActions.navigateToHome()
+                                ReadItDestinations.COMMENT_ROUTE -> navActions.navigateToComment()
+//                            ReadItDestinations.MY_PAGE_ROUTE -> navActions.navigateToMyPage()
+                            }
+                        },
+                        icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
+                        label = { Text(text = item.label) }
+                    )
+                }
+
+            }
         }
     }
 
