@@ -138,4 +138,16 @@ class EditCommentViewModel @Inject constructor(
             errorMessage = null
         )
     }
+
+    fun showDialog() {
+        _uiState.value = _uiState.value.copy(
+            showDialog = true
+        )
+    }
+
+    fun hideDialog() {
+        _uiState.value = _uiState.value.copy(
+            showDialog = false
+        )
+    }
 }

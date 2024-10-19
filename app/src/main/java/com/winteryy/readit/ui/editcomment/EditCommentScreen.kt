@@ -1,5 +1,6 @@
 package com.winteryy.readit.ui.editcomment
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
 import com.winteryy.readit.ui.components.TextTopBar
+import com.winteryy.readit.ui.components.dialog.CustomDialog
+import com.winteryy.readit.ui.components.dialog.DialogButtonInfo
+import com.winteryy.readit.ui.components.dialog.DialogButtonType
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
 import com.winteryy.readit.ui.theme.theme_grey_black
@@ -52,6 +56,14 @@ fun EditCommentScreen(
         }
     }
 
+    BackHandler {
+        if(editCommentUiState.isEditing) {
+            editCommentViewModel.showDialog()
+        } else {
+            onBackArrowClicked()
+        }
+    }
+
     Box(
         modifier = modifier
     ) {
@@ -71,14 +83,14 @@ fun EditCommentScreen(
         ) {
             TextTopBar(
                 title = "코멘트 작성",
-                onBackArrowClicked = onBackArrowClicked,
+                onBackArrowClicked = if(editCommentUiState.isEditing) ( {editCommentViewModel.showDialog()} ) else onBackArrowClicked,
                 backButtonImageVector = Icons.Filled.Close,
                 trailingText = if (editCommentUiState.isEditing) "완료" else "삭제",
                 trailingTextCallback = {
                     if (editCommentUiState.isEditing) {
                         editCommentViewModel.saveComment()
                     } else {
-                        editCommentViewModel.deleteComment()
+                        editCommentViewModel.showDialog()
                     }
                 }
             )
@@ -100,6 +112,38 @@ fun EditCommentScreen(
                             editCommentViewModel.toggleEditing()
                         }
                     },
+            )
+        }
+    }
+
+    if(editCommentUiState.showDialog) {
+        if(editCommentUiState.isEditing) {
+            CustomDialog(
+                description = "저장하지 않은 변경사항은 반영되지 않습니다.\n나가시겠습니까?",
+                buttons = listOf(
+                    DialogButtonInfo(
+                        text = "확인",
+                        type = DialogButtonType.FILLED,
+                    ) { onBackArrowClicked() },
+                    DialogButtonInfo(
+                        text = "취소",
+                        type = DialogButtonType.OUTLINED
+                    ) { editCommentViewModel.hideDialog() }
+                )
+            )
+        } else {
+            CustomDialog(
+                description = "코멘트를 삭제하시겠습니까?",
+                buttons = listOf(
+                    DialogButtonInfo(
+                        text = "확인",
+                        type = DialogButtonType.FILLED,
+                    ) { editCommentViewModel.deleteComment() },
+                    DialogButtonInfo(
+                        text = "취소",
+                        type = DialogButtonType.OUTLINED
+                    ) { editCommentViewModel.hideDialog() }
+                )
             )
         }
     }
