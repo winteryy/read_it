@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,27 +17,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.winteryy.readit.ui.theme.ReadItTheme
-import com.winteryy.readit.ui.theme.theme_grey_black
 import com.winteryy.readit.ui.theme.theme_grey_white
 
 @Composable
 fun CustomDialog(
-    title: String,
-    description: String,
-    buttons: List<DialogButtonInfo>,
     modifier: Modifier = Modifier,
+    title: String = "",
+    description: String = "",
+    buttons: List<DialogButtonInfo> = emptyList(),
+    onDismissRequest: () -> Unit = {}
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                color = theme_grey_black.copy(alpha = 0.5f)
-            ),
-        contentAlignment = Alignment.Center
+
+    Dialog(
+        onDismissRequest = onDismissRequest,
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .background(
                     color = theme_grey_white,
                     shape = RoundedCornerShape(8.dp)
@@ -79,6 +75,7 @@ fun CustomDialog(
             }
         }
     }
+
 }
 
 @Composable
@@ -86,9 +83,9 @@ fun CustomDialog(
 fun CustomDialogPreview() {
     ReadItTheme {
         CustomDialog(
-            "타이틀",
-            "책 로드 실패.",
-            listOf(
+            title = "타이틀",
+            description = "책 로드 실패.",
+            buttons = listOf(
                 DialogButtonInfo(
                     text = "확인",
                     type = DialogButtonType.FILLED,

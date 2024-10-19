@@ -31,17 +31,16 @@ fun CustomDialogButton(
             )
             .border(2.dp, theme_color_lightDodgerBlue, RoundedCornerShape(8.dp))
             .height(40.dp)
+            .clickable {
+                dialogButtonInfo.onClick.invoke()
+            },
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = dialogButtonInfo.text,
             style = typography.labelMedium,
             color = if(dialogButtonInfo.type == DialogButtonType.FILLED) theme_grey_white
                 else theme_color_lightDodgerBlue,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .clickable {
-                    dialogButtonInfo.onClick.invoke()
-                }
         )
     }
 }
