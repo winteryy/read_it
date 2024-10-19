@@ -24,6 +24,9 @@ import com.winteryy.readit.ui.components.BookItemRow
 import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.components.TitleAndText
+import com.winteryy.readit.ui.components.dialog.CustomDialog
+import com.winteryy.readit.ui.components.dialog.DialogButtonInfo
+import com.winteryy.readit.ui.components.dialog.DialogButtonType
 import com.winteryy.readit.ui.theme.theme_grey_black
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
@@ -44,12 +47,21 @@ fun BookDetailScreen(
     }
 
     bookDetailUiState.error?.let {
-        LaunchedEffect(it) {
-            when(it) {
-                BookDetailUiError.InitFailError -> {
-                    //todo 다이얼로그 띄우고 나가기 처리
-                }
-                is BookDetailUiError.QueryError -> {
+        when (it) {
+            BookDetailUiError.InitFailError -> {
+                CustomDialog(
+                    description = "책 정보를 정상적으로 불러오지 못했습니다.\n이전 화면으로 돌아갑니다.",
+                    buttons = listOf(
+                        DialogButtonInfo(
+                            text = "확인",
+                            type = DialogButtonType.FILLED,
+                        ) { onBackArrowClicked() }
+                    )
+                )
+            }
+
+            is BookDetailUiError.QueryError -> {
+                LaunchedEffect(it) {
                     snackbarHostState.showSnackbar(it.msg)
                     bookDetailViewModel.consumeError()
                 }
@@ -70,7 +82,7 @@ fun BookDetailScreen(
                 onBackArrowClicked = onBackArrowClicked
             )
             HorizontalDivider()
-            if(bookDetailUiState.book != Book.NONE) {
+            if (bookDetailUiState.book != Book.NONE) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -101,7 +113,7 @@ fun BookDetailScreen(
             }
         }
 
-        if(bookDetailUiState.isLoading) {
+        if (bookDetailUiState.isLoading) {
             IndeterminateCircularIndicator(
                 modifier = Modifier
                     .matchParentSize()

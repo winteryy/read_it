@@ -27,7 +27,6 @@ class BookDetailViewModel @Inject constructor(
     val uiState: StateFlow<BookDetailUiState> get() = _uiState.asStateFlow()
 
     fun initBook(book: Book?) {
-        println(book)
         book?.let {
             viewModelScope.launch {
                 bookStorageRepository.getBookFlowByIsbn(book.isbn).combine(
