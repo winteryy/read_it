@@ -74,6 +74,7 @@ fun HomeRoute(
                     }
                     is HomeUiState.SectionDetailState -> HomeSectionDetailScreen(
                         bookPagingDataFlow = curState.sectionBookPagingDataFlow,
+                        sectionType = curState.sectionType,
                         onBookItemClicked = navigateToBookDetail
                     )
                 }

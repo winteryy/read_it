@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.winteryy.readit.ui.theme.ReadItTheme
+import com.winteryy.readit.ui.theme.theme_grey_white
 import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 
 @Composable
@@ -32,6 +33,7 @@ fun ReadItApp(
     val snackbarHostState = remember{ SnackbarHostState() }
 
     Scaffold(
+        containerColor = theme_grey_white,
         bottomBar = { MainBottomNavigationBar(navController, navActions) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = modifier

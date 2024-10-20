@@ -4,11 +4,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +28,7 @@ import com.winteryy.readit.model.Comment
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
 import com.winteryy.readit.ui.theme.Typography
+import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
 import com.winteryy.readit.ui.theme.theme_grey_gunPowder
 import com.winteryy.readit.ui.util.getYearByCalender
 import java.util.Date
@@ -36,6 +39,7 @@ private val BOOK_HEIGHT = 150.dp
 fun BookItemRow(
     book: Book,
     modifier: Modifier = Modifier,
+    showRating: Boolean = false,
     onClick: ((Book) -> Unit)? = null
 ) {
     Surface(
@@ -83,6 +87,14 @@ fun BookItemRow(
                     text = book.pubDate.getYearByCalender().toString() + " · " + book.publisher,
                     style = Typography.bodyMedium.copy(color = theme_grey_gunPowder)
                 )
+                if(showRating) {
+                    Spacer(modifier = Modifier.size(4.dp))
+                    Text(
+                        text = "★ ${book.rating}",
+                        style = typography.bodyMedium,
+                        color = theme_color_lightDodgerBlue,
+                    )
+                }
             }
         }
     }
@@ -152,7 +164,8 @@ fun BookItemRowPreview() {
                 "1321412",
                 description = "asdasd",
                 pubDate = Date(),
-            )
+            ),
+            showRating = true
         )
     }
 }

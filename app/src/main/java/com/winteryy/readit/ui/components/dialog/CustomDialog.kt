@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -56,6 +57,7 @@ fun CustomDialog(
             ) {
                 Text(
                     text = description,
+                    textAlign = TextAlign.Center,
                     style = typography.bodyMedium
                 )
             }
@@ -84,7 +86,7 @@ fun CustomDialogPreview() {
     ReadItTheme {
         CustomDialog(
             title = "타이틀",
-            description = "책 로드 실패.",
+            description = "책 로드 실패.\n긴 문장으로 테스트를 진행합니다. 좀 더 길게해볼까요.",
             buttons = listOf(
                 DialogButtonInfo(
                     text = "확인",

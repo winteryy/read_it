@@ -92,11 +92,13 @@ fun SectionItem(
                             BookItem(
                                 book = book,
                                 bookWidth = itemWidth,
+                                showRating = section.sectionType.showRating,
                                 onClick = onItemClicked
                             )
                         } else {
                             BookItem(
                                 book = book,
+                                showRating = section.sectionType.showRating,
                                 onClick = onItemClicked
                             )
                         }

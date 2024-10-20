@@ -15,6 +15,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
+import com.winteryy.readit.model.SectionType
 import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.SectionItem
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
@@ -77,6 +78,7 @@ fun HomeSearchResultScreen(
 @Composable
 fun HomeSectionDetailScreen(
     bookPagingDataFlow: Flow<PagingData<Book>>,
+    sectionType: SectionType,
     modifier: Modifier = Modifier,
     onBookItemClicked: (Book) -> Unit = {}
 ) {
@@ -88,6 +90,7 @@ fun HomeSectionDetailScreen(
         lazyListState = lazyListState,
         modifier = modifier
             .padding(horizontal = DEFAULT_PADDING),
+        showRating = sectionType.showRating,
         onItemClicked = onBookItemClicked
     )
 }
