@@ -1,11 +1,13 @@
 package com.winteryy.readit.data.remote.search.impl
 
+import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.winteryy.readit.R
 import com.winteryy.readit.data.RemoteError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.remote.search.NaverBookApiService
@@ -13,6 +15,7 @@ import com.winteryy.readit.data.remote.search.SearchRepository
 import com.winteryy.readit.data.remote.search.paging.SearchPagingSource
 import com.winteryy.readit.data.remote.search.paging.SearchPagingSource.Companion.SEARCH_PAGE_SIZE
 import com.winteryy.readit.model.Book
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -21,7 +24,8 @@ import javax.inject.Inject
 
 class SearchRepositoryImpl @Inject constructor(
     private val naverBookApiService: NaverBookApiService,
-    private val connectivityManager: ConnectivityManager
+    private val connectivityManager: ConnectivityManager,
+    @ApplicationContext private val context: Context
 ) : SearchRepository {
     override suspend fun searchBooks(
         query: String,
@@ -42,7 +46,7 @@ class SearchRepositoryImpl @Inject constructor(
                 Result.Success(searchBookList)
             } catch (e: Exception) {
                 Result.Error(
-                    RemoteError.NetworkError(e.message)
+                    RemoteError.NetworkError(context.getString(R.string.network_error_search_fail))
                 )
             }
         }
@@ -68,12 +72,12 @@ class SearchRepositoryImpl @Inject constructor(
                 )
             } catch (e: Exception) {
                 Result.Error(
-                    RemoteError.NetworkError(e.message)
+                    RemoteError.NetworkError(context.getString(R.string.network_error_search_fail))
                 )
             }
         } else {
             Result.Error(
-                RemoteError.NetworkError("네트워크에 연결되어 있지 않습니다.")
+                RemoteError.NetworkError(context.getString(R.string.network_error_no_connection))
             )
         }
     }

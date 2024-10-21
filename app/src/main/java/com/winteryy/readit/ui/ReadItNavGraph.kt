@@ -75,7 +75,7 @@ fun ReadItNavGraph(
 
         ) { backStackEntry ->
             BookDetailScreen(
-                book = backStackEntry.savedStateHandle.get<Book>("book"),
+                book = backStackEntry.savedStateHandle.get<Book>(ReadItNavSavedStateHandleKey.BOOK),
                 snackbarHostState = snackbarHostState,
                 onBackArrowClicked = { navController.popBackStack() },
                 onCommentButtonClicked = navActions.navigateToEditComment
@@ -86,7 +86,7 @@ fun ReadItNavGraph(
             enterTransition = { fadeIn(animationSpec = tween(500)) }
         ) { backStackEntry ->
             EditCommentScreen(
-                isbn = backStackEntry.savedStateHandle.get<String>("isbn") ?: "",
+                isbn = backStackEntry.savedStateHandle.get<String>(ReadItNavSavedStateHandleKey.ISBN) ?: "",
                 snackbarHostState = snackbarHostState,
                 onBackArrowClicked = { navController.popBackStack() }
             )

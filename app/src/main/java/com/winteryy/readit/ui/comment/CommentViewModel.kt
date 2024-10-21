@@ -1,11 +1,14 @@
 package com.winteryy.readit.ui.comment
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.winteryy.readit.R
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.bookstorage.BookStorageRepository
 import com.winteryy.readit.data.local.commentstorage.CommentStorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +24,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CommentViewModel @Inject constructor(
     private val bookStorageRepository: BookStorageRepository,
-    private val commentStorageRepository: CommentStorageRepository
+    private val commentStorageRepository: CommentStorageRepository,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _commentUiState: MutableStateFlow<CommentUiState> =
         MutableStateFlow(CommentUiState.CommentMainState(isLoading = true))
@@ -39,7 +43,9 @@ class CommentViewModel @Inject constructor(
                 )
             } else {
                 CommentUiState.CommentMainState(
-                    errorMessage = "저장된 코멘트를 정상적으로 불러오지 못했습니다."
+                    errorMessage = if(recentCommentWithBookList is Result.Error) recentCommentWithBookList.exception.message
+                    else if(commentNum is Result.Error) commentNum.exception.message
+                    else context.getString(R.string.unknown_error) //non-reachable
                 )
             }
         }

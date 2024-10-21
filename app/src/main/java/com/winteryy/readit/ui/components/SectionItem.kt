@@ -22,20 +22,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.winteryy.readit.R
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.model.SectionType
 import com.winteryy.readit.ui.theme.DEFAULT_PADDING
 import com.winteryy.readit.ui.theme.ReadItTheme
-import com.winteryy.readit.ui.theme.theme_color_lightDodgerBlue
-import com.winteryy.readit.ui.theme.theme_color_malibu
 import com.winteryy.readit.ui.theme.theme_color_malibu_light
-import com.winteryy.readit.ui.theme.theme_grey_whiteSmoke
 import java.util.Date
 
 @Composable
@@ -110,7 +109,7 @@ fun SectionItem(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = section.emptyMsg?:"등록된 책이 없습니다.\n책을 추가해보세요.",
+                        text = section.emptyMsg?: stringResource(R.string.section_default_empty_text),
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
