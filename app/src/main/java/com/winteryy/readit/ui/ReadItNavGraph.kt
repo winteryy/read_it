@@ -1,5 +1,10 @@
 package com.winteryy.readit.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -27,11 +32,19 @@ fun ReadItNavGraph(
     NavHost(
         navController = navController,
         startDestination = startDestination,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
         modifier = modifier
             .background(Color.White)
     ) {
         composable(
             route = ReadItDestinations.HOME_ROUTE,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
         ) { HomeRoute(
                 navigateToBookDetail = navActions.navigateToBookDetail,
                 snackbarHostState = snackbarHostState
@@ -39,6 +52,12 @@ fun ReadItNavGraph(
         }
         composable(
             route = ReadItDestinations.COMMENT_ROUTE,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
         ) {
             CommentRoute(
                 snackbarHostState = snackbarHostState,
@@ -50,6 +69,10 @@ fun ReadItNavGraph(
         ) { MyPageScreen() }
         composable(
             route = ReadItDestinations.BOOK_DETAIL_ROUTE,
+            enterTransition = { fadeIn(animationSpec = tween(500)) },
+            exitTransition = { fadeOut(animationSpec = tween(500)) },
+            popExitTransition = { null }
+
         ) { backStackEntry ->
             BookDetailScreen(
                 book = backStackEntry.savedStateHandle.get<Book>("book"),
@@ -60,6 +83,7 @@ fun ReadItNavGraph(
         }
         composable(
             route = ReadItDestinations.EDIT_COMMENT_ROUTE,
+            enterTransition = { fadeIn(animationSpec = tween(500)) }
         ) { backStackEntry ->
             EditCommentScreen(
                 isbn = backStackEntry.savedStateHandle.get<String>("isbn") ?: "",

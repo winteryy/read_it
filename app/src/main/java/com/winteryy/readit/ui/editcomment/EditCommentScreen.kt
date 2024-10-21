@@ -47,7 +47,7 @@ fun EditCommentScreen(
     val editCommentUiState by editCommentViewModel.uiState.collectAsStateWithLifecycle()
     val focusManager = LocalFocusManager.current
     val textFieldFocusRequester = remember { FocusRequester() }
-    //todo 다이얼로그 줄바꿈 조정, 북리스트 뷰 배경색 문제, 상단바 색 문제, 내비게이션 애니메이션 문제, 별점 표기
+
     LaunchedEffect(isbn) {
         editCommentViewModel.initState(isbn)
     }
