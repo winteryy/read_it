@@ -1,5 +1,7 @@
 package com.winteryy.readit.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.HorizontalDivider
@@ -10,17 +12,21 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Comment
+import com.winteryy.readit.ui.theme.theme_grey_white
 
 @Composable
 fun BookListColumn(
     lazyPagingBooks: LazyPagingItems<Book>,
     lazyListState: LazyListState,
     modifier: Modifier = Modifier,
+    showRating: Boolean = false,
     onItemClicked: (Book) -> Unit = {}
 ) {
     LazyColumn(
         state = lazyListState,
         modifier = modifier
+            .fillMaxHeight()
+            .background(theme_grey_white)
     ) {
         items(
             count = lazyPagingBooks.itemCount,
@@ -29,7 +35,7 @@ fun BookListColumn(
         ) { ind ->
             val item = lazyPagingBooks[ind]
             item?.let {
-                BookItemRow(book = it, onClick = onItemClicked)
+                BookItemRow(book = it, showRating = showRating, onClick = onItemClicked)
             }
             if(ind!=lazyPagingBooks.itemCount-1) {
                 HorizontalDivider()

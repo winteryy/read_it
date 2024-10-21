@@ -6,14 +6,21 @@ import com.winteryy.readit.model.Comment
 import kotlinx.coroutines.flow.Flow
 
 sealed interface CommentUiState {
-    object Loading: CommentUiState
-    object FailState: CommentUiState
+    val isLoading: Boolean
+    val errorMessage: String?
+
     data class CommentMainState(
-        val commentNum: Int,
-        val recentCommentWithBookList: List<Pair<Comment, Book>>
+        val commentNum: Int = 0,
+        val recentCommentWithBookList: List<Pair<Comment, Book>> = emptyList(),
+        val curPage: Int = 0,
+        override val isLoading: Boolean = false,
+        override val errorMessage: String? = null
     ): CommentUiState
+
     data class CommentListState(
-        val booksHavingCommentPagingDataFlow: Flow<PagingData<Book>>
+        val booksHavingCommentPagingDataFlow: Flow<PagingData<Book>>,
+        override val isLoading: Boolean = false,
+        override val errorMessage: String? = null
     ): CommentUiState
 
 }

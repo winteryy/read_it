@@ -24,31 +24,38 @@ object ReadItDestinations {
 }
 
 class ReadItNavigationActions(navController: NavController) {
-    val navigateToHome: () -> Unit = {
-        navController.navigate(ReadItDestinations.HOME_ROUTE) {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
+    val navigateToHome: () -> Unit = navigateToHome@{
+        if(navController.currentDestination?.route != ReadItDestinations.HOME_ROUTE) {
+            navController.navigate(ReadItDestinations.HOME_ROUTE) {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+
+                }
+                launchSingleTop = true
+                restoreState = true
             }
-            launchSingleTop = true
-            restoreState = true
         }
     }
     val navigateToComment: () -> Unit = {
-        navController.navigate(ReadItDestinations.COMMENT_ROUTE) {
-            popUpTo(navController.currentBackStackEntry?.destination?.id ?: navController.graph.findStartDestination().id) {
-                saveState = true
+        if(navController.currentDestination?.route != ReadItDestinations.COMMENT_ROUTE) {
+            navController.navigate(ReadItDestinations.COMMENT_ROUTE) {
+                popUpTo(navController.currentBackStackEntry?.destination?.id ?: navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
             }
-            launchSingleTop = true
-            restoreState = true
         }
     }
     val navigateToMyPage: () -> Unit = {
-        navController.navigate(ReadItDestinations.MY_PAGE_ROUTE) {
-            popUpTo(navController.currentBackStackEntry?.destination?.id ?: navController.graph.findStartDestination().id) {
-                saveState = true
+        if(navController.currentDestination?.route != ReadItDestinations.MY_PAGE_ROUTE) {
+            navController.navigate(ReadItDestinations.MY_PAGE_ROUTE) {
+                popUpTo(navController.currentBackStackEntry?.destination?.id ?: navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
             }
-            launchSingleTop = true
-            restoreState = true
         }
     }
     val navigateToBookDetail: (Book) -> Unit = { book ->
@@ -62,7 +69,6 @@ class ReadItNavigationActions(navController: NavController) {
 
         navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
     }
-
     val navigateToEditComment: (String) -> Unit = { isbn ->
         navController.navigate(ReadItDestinations.EDIT_COMMENT_ROUTE) {
             popUpTo(navController.currentBackStackEntry?.destination?.id ?: navController.graph.findStartDestination().id) {

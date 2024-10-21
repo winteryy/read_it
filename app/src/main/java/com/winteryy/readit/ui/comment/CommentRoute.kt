@@ -1,6 +1,6 @@
 package com.winteryy.readit.ui.comment
 
-import androidx.compose.material3.Text
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun CommentRoute(
+    snackbarHostState: SnackbarHostState,
     navigateToEditComment: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -18,24 +19,22 @@ fun CommentRoute(
         when(curState) {
             is CommentUiState.CommentListState -> {
                 CommentListScreen(
-                    booksHavingCommentPagingDataFlow = curState.booksHavingCommentPagingDataFlow,
+                    commentListState = curState,
                     navigateToCommentMain = { commentViewModel.setCommentMainState() },
-                    onCommentItemClicked = { navigateToEditComment(it.isbn) }
+                    onCommentItemClicked = { navigateToEditComment(it.isbn) },
+                    modifier = modifier
                 )
             }
             is CommentUiState.CommentMainState -> {
                 CommentMainScreen(
-                    commentNum = curState.commentNum,
-                    recentCommentList = curState.recentCommentWithBookList,
+                    commentMainState = curState,
+                    snackbarHostState = snackbarHostState,
+                    consumeErrorMessage = { commentViewModel.consumeErrorMessage() },
                     navigateToCommentList = { commentViewModel.setCommentListState() },
-                    onCommentItemClicked = { navigateToEditComment(it) }
+                    onCommentItemClicked = { navigateToEditComment(it) },
+                    onPageChanged = { commentViewModel.updateCurPage(it) },
+                    modifier = modifier,
                 )
-            }
-            CommentUiState.FailState -> {
-                Text(text = "Fail State")
-            }
-            CommentUiState.Loading -> {
-                Text(text = "Loading State")
             }
         }
     }

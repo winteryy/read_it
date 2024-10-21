@@ -17,7 +17,19 @@ data class Book(
     val saveDate: Date? = null,
     val rating: Float = 0.0F,
     val ratedDate: Date? = null
-): Parcelable
+): Parcelable {
+    companion object {
+        val NONE = Book(
+            title = "",
+            image = "",
+            author = "",
+            publisher = "",
+            isbn = "",
+            description = "",
+            pubDate = Date(),
+        )
+    }
+}
 
 enum class BookSaveStatus {
     NONE,

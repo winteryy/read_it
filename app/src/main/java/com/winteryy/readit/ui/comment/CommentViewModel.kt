@@ -8,10 +8,13 @@ import com.winteryy.readit.data.local.commentstorage.CommentStorageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +24,30 @@ class CommentViewModel @Inject constructor(
     private val commentStorageRepository: CommentStorageRepository
 ) : ViewModel() {
     private val _commentUiState: MutableStateFlow<CommentUiState> =
-        MutableStateFlow(CommentUiState.Loading)
+        MutableStateFlow(CommentUiState.CommentMainState(isLoading = true))
     val commentUiState: StateFlow<CommentUiState> get() = _commentUiState.asStateFlow()
+
+    private var curPage: Int = 0
+
+    private val mainState: StateFlow<CommentUiState> = commentStorageRepository.getRecentComments()
+        .combine(commentStorageRepository.getCommentNum()) { recentCommentWithBookList, commentNum ->
+            curPage = 0
+            if (recentCommentWithBookList is Result.Success && commentNum is Result.Success) {
+                CommentUiState.CommentMainState(
+                    commentNum = commentNum.data,
+                    recentCommentWithBookList = recentCommentWithBookList.data
+                )
+            } else {
+                CommentUiState.CommentMainState(
+                    errorMessage = "저장된 코멘트를 정상적으로 불러오지 못했습니다."
+                )
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = CommentUiState.CommentMainState(isLoading = true)
+        )
 
     private var currentJob: Job? = null
 
@@ -34,20 +59,15 @@ class CommentViewModel @Inject constructor(
         currentJob?.cancel()
 
         currentJob = viewModelScope.launch {
-            commentStorageRepository.getRecentComments()
-                .combine(commentStorageRepository.getCommentNum()) { recentCommentWithBookList, commentNum ->
-                    if (recentCommentWithBookList is Result.Success && commentNum is Result.Success) {
-                        CommentUiState.CommentMainState(
-                            commentNum.data,
-                            recentCommentWithBookList.data
-                        )
-                    } else {
-                        CommentUiState.FailState
-                    }
+            mainState.collectLatest { state ->
+                _commentUiState.value = if(state is CommentUiState.CommentMainState) {
+                    state.copy(
+                        curPage = curPage
+                    )
+                } else {
+                    state
                 }
-                .collectLatest { state ->
-                    _commentUiState.value = state
-                }
+            }
         }
     }
 
@@ -57,14 +77,32 @@ class CommentViewModel @Inject constructor(
         viewModelScope.launch {
             when (val result = bookStorageRepository.getBooksHavingCommentPagingFlow()) {
                 is Result.Error -> {
-                    //todo 에러 핸들링
+                    _commentUiState.value = CommentUiState.CommentListState(
+                        errorMessage = result.exception.message,
+                        booksHavingCommentPagingDataFlow = emptyFlow()
+                    )
                 }
 
                 is Result.Success -> {
                     _commentUiState.value = CommentUiState.CommentListState(
-                        result.data
+                        booksHavingCommentPagingDataFlow = result.data
                     )
                 }
+            }
+        }
+    }
+
+    fun updateCurPage(page: Int) {
+        curPage = page
+    }
+
+    fun consumeErrorMessage() {
+        _commentUiState.value = when (val state = _commentUiState.value) {
+            is CommentUiState.CommentListState -> {
+                state.copy(errorMessage = null)
+            }
+            is CommentUiState.CommentMainState -> {
+                state.copy(errorMessage = null)
             }
         }
     }
