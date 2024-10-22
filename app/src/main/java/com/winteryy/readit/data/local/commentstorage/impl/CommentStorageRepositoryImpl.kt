@@ -1,9 +1,11 @@
 package com.winteryy.readit.data.local.commentstorage.impl
 
+import android.content.Context
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.winteryy.readit.R
 import com.winteryy.readit.data.LocalError
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.commentstorage.CommentDao
@@ -13,12 +15,14 @@ import com.winteryy.readit.data.local.commentstorage.toComment
 import com.winteryy.readit.data.local.commentstorage.toCommentBookPair
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Comment
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CommentStorageRepositoryImpl @Inject constructor(
-    private val commentDao: CommentDao
+    private val commentDao: CommentDao,
+    @ApplicationContext private val context: Context
 ): CommentStorageRepository {
     override suspend fun insertComment(comment: Comment): Result<Unit> {
         try {
@@ -33,7 +37,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
             return Result.Success(Unit)
         } catch (e: Exception) {
             return Result.Error(
-                LocalError.LocalDbError(e.message)
+                LocalError.LocalDbError(context.getString(R.string.db_error_insertion_fail))
             )
         }
     }
@@ -45,7 +49,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
                     Result.Success(dtoList.map { it.toCommentBookPair() })
                 } catch (e: Exception) {
                     Result.Error(
-                        LocalError.LocalDbError(e.message)
+                        LocalError.LocalDbError(context.getString(R.string.db_error_load_fail))
                     )
                 }
             }
@@ -68,7 +72,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
             )
         } catch (e: Exception) {
             Result.Error(
-                LocalError.LocalDbError(e.message)
+                LocalError.LocalDbError(context.getString(R.string.db_error_load_fail))
             )
         }
     }
@@ -80,7 +84,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
                     Result.Success(dtoList.map { it.toCommentBookPair() } )
                 } catch (e: Exception) {
                     Result.Error(
-                        LocalError.LocalDbError(e.message)
+                        LocalError.LocalDbError(context.getString(R.string.db_error_load_fail))
                     )
                 }
             }
@@ -103,7 +107,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
             )
         } catch (e: Exception) {
             Result.Error(
-                LocalError.LocalDbError(e.message)
+                LocalError.LocalDbError(context.getString(R.string.db_error_load_fail))
             )
         }
     }
@@ -115,7 +119,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
                     Result.Success(num)
                 } catch (e: Exception) {
                     Result.Error(
-                        LocalError.LocalDbError(e.message)
+                        LocalError.LocalDbError(context.getString(R.string.db_error_load_fail))
                     )
                 }
             }
@@ -134,7 +138,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
                     }
                 } catch (e: Exception) {
                     Result.Error(
-                        LocalError.LocalDbError(e.message)
+                        LocalError.LocalDbError(context.getString(R.string.db_error_load_fail))
                     )
                 }
             }
@@ -146,7 +150,7 @@ class CommentStorageRepositoryImpl @Inject constructor(
             return Result.Success(Unit)
         } catch (e: Exception) {
             return Result.Error(
-                LocalError.LocalDbError(e.message)
+                LocalError.LocalDbError(context.getString(R.string.db_error_deletion_fail))
             )
         }
     }

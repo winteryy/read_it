@@ -50,10 +50,10 @@ fun BookDetailScreen(
         when (it) {
             BookDetailUiError.InitFailError -> {
                 CustomDialog(
-                    description = "책 정보를 정상적으로 불러오지 못했습니다.\n이전 화면으로 돌아갑니다.",
+                    description = stringResource(R.string.dialog_description_book_load_fail),
                     buttons = listOf(
                         DialogButtonInfo(
-                            text = "확인",
+                            text = stringResource(R.string.confirm),
                             type = DialogButtonType.FILLED,
                         ) { onBackArrowClicked() }
                     )

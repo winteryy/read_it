@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.winteryy.readit.R
 import com.winteryy.readit.model.Book
 import com.winteryy.readit.ui.components.BookListColumn
 import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
@@ -78,7 +80,7 @@ fun CommentMainScreen(
         } else {
             if(commentMainState.recentCommentWithBookList.isNotEmpty()) {
                 Text(
-                    text = "최근에 작성한 코멘트",
+                    text = stringResource(R.string.comment_title_recent_comments),
                     style = Typography.headlineMedium.copy(
                         fontWeight = FontWeight.Bold
                     )
@@ -151,7 +153,7 @@ fun CommentMainScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "아직 작성한 코멘트가 없네요!\n읽은 책에 대한 코멘트를 작성해보세요.",
+                        text = stringResource(R.string.comment_text_empty_comment_list),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -170,7 +172,7 @@ fun CommentListScreen(
 ) {
     if(commentListState.errorMessage!=null) {
         CustomDialog(
-            description = "코멘트 리스트를 불러오는 도중\n오류가 발생했습니다.",
+            description = stringResource(R.string.dialog_description_load_comments_fail),
             buttons = listOf(
                 DialogButtonInfo(
                     text = "확인",
@@ -190,7 +192,7 @@ fun CommentListScreen(
                     .fillMaxSize()
             ) {
                 TextTopBar(
-                    title = "코멘트를 작성한 책",
+                    title = stringResource(R.string.comment_title_book_has_comment),
                     onBackArrowClicked = navigateToCommentMain
                 )
                 BookListColumn(

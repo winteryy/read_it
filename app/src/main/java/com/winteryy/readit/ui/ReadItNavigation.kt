@@ -23,6 +23,11 @@ object ReadItDestinations {
     const val EDIT_COMMENT_ROUTE = "edit_comment"
 }
 
+object ReadItNavSavedStateHandleKey {
+    const val BOOK = "book"
+    const val ISBN = "isbn"
+}
+
 class ReadItNavigationActions(navController: NavController) {
     val navigateToHome: () -> Unit = navigateToHome@{
         if(navController.currentDestination?.route != ReadItDestinations.HOME_ROUTE) {
@@ -67,7 +72,7 @@ class ReadItNavigationActions(navController: NavController) {
             restoreState = true
         }
 
-        navController.currentBackStackEntry?.savedStateHandle?.set("book", book)
+        navController.currentBackStackEntry?.savedStateHandle?.set(ReadItNavSavedStateHandleKey.BOOK, book)
     }
     val navigateToEditComment: (String) -> Unit = { isbn ->
         navController.navigate(ReadItDestinations.EDIT_COMMENT_ROUTE) {
@@ -78,6 +83,6 @@ class ReadItNavigationActions(navController: NavController) {
             restoreState = true
         }
 
-        navController.currentBackStackEntry?.savedStateHandle?.set("isbn", isbn)
+        navController.currentBackStackEntry?.savedStateHandle?.set(ReadItNavSavedStateHandleKey.ISBN, isbn)
     }
 }

@@ -24,9 +24,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.winteryy.readit.R
 import com.winteryy.readit.ui.components.IndeterminateCircularIndicator
 import com.winteryy.readit.ui.components.TextTopBar
 import com.winteryy.readit.ui.components.dialog.CustomDialog
@@ -91,10 +93,11 @@ fun EditCommentScreen(
             modifier = Modifier.fillMaxSize()
         ) {
             TextTopBar(
-                title = "코멘트 작성",
+                title = stringResource(R.string.edit_comment_title),
                 onBackArrowClicked = if(editCommentUiState.isEditing) ( {editCommentViewModel.showDialog()} ) else onBackArrowClicked,
                 backButtonImageVector = Icons.Filled.Close,
-                trailingText = if (editCommentUiState.isEditing) "완료" else "삭제",
+                trailingText = if (editCommentUiState.isEditing) stringResource(R.string.complete)
+                    else stringResource(R.string.delete),
                 trailingTextCallback = {
                     if (editCommentUiState.isEditing) {
                         editCommentViewModel.saveComment()
@@ -113,7 +116,7 @@ fun EditCommentScreen(
                 colors = TextFieldDefaults.colors().copy(
                     unfocusedContainerColor = Color.White
                 ),
-                placeholder = { Text(text = "코멘트를 입력해주세요.") },
+                placeholder = { Text(text = stringResource(R.string.edit_comment_text_field_placeholder)) },
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth()
@@ -130,31 +133,31 @@ fun EditCommentScreen(
     if(editCommentUiState.showDialog) {
         if(editCommentUiState.isEditing) {
             CustomDialog(
-                description = "저장하지 않은 변경사항은\n반영되지 않습니다.\n나가시겠습니까?",
+                description = stringResource(R.string.dialog_description_warn_non_save),
                 buttons = listOf(
                     DialogButtonInfo(
-                        text = "확인",
+                        text = stringResource(R.string.confirm),
                         type = DialogButtonType.FILLED,
                     ) {
                         editCommentViewModel.hideDialog()
                         onBackArrowClicked()
                       },
                     DialogButtonInfo(
-                        text = "취소",
+                        text = stringResource(R.string.cancel),
                         type = DialogButtonType.OUTLINED
                     ) { editCommentViewModel.hideDialog() }
                 )
             )
         } else {
             CustomDialog(
-                description = "코멘트를 삭제하시겠습니까?",
+                description = stringResource(R.string.dialog_description_warn_deletion),
                 buttons = listOf(
                     DialogButtonInfo(
-                        text = "확인",
+                        text = stringResource(R.string.confirm),
                         type = DialogButtonType.FILLED,
                     ) { editCommentViewModel.deleteComment() },
                     DialogButtonInfo(
-                        text = "취소",
+                        text = stringResource(R.string.cancel),
                         type = DialogButtonType.OUTLINED
                     ) { editCommentViewModel.hideDialog() }
                 )

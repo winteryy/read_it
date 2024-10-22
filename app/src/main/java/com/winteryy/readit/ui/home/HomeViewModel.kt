@@ -1,7 +1,9 @@
 package com.winteryy.readit.ui.home
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.winteryy.readit.R
 import com.winteryy.readit.data.Result
 import com.winteryy.readit.data.local.bookstorage.BookStorageRepository
 import com.winteryy.readit.data.remote.search.SearchRepository
@@ -9,6 +11,7 @@ import com.winteryy.readit.model.Book
 import com.winteryy.readit.model.Section
 import com.winteryy.readit.model.SectionType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val searchRepository: SearchRepository,
-    private val bookStorageRepository: BookStorageRepository
+    private val bookStorageRepository: BookStorageRepository,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
 
     private val _homeUiState = MutableStateFlow<HomeUiState>(
@@ -48,17 +52,17 @@ class HomeViewModel @Inject constructor(
                 createSectionFromBooksResult(
                     sectionType = SectionType.READING,
                     result = readingBooksResult,
-                    emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
+                    emptyMsg = context.getString(R.string.no_registered_book)
                 ),
                 createSectionFromBooksResult(
                     sectionType = SectionType.WISH,
                     result = wishBooksResult,
-                    emptyMsg = "등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요."
+                    emptyMsg = context.getString(R.string.no_registered_book)
                 ),
                 createSectionFromBooksResult(
                     sectionType = SectionType.RATED,
                     result = ratedBooksResult,
-                    emptyMsg = "평가한 책이 없습니다.\n읽은 책을 평가해주세요.")
+                    emptyMsg = context.getString(R.string.no_commented_book))
             )
         }
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
@@ -87,8 +91,8 @@ class HomeViewModel @Inject constructor(
                         isLoading = false,
                         errorMessage = null
                     ) }
-                } else {
-                    setErrorMessage("책 정보를 정상적으로 불러올 수 없습니다.")
+                } else if(!_homeUiState.value.isLoading) {
+                    setErrorMessage(context.getString(R.string.error_msg_book_load_fail))
                 }
             }
         }

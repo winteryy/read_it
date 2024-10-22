@@ -3,10 +3,48 @@
 
     <string name="test">테스트</string>
 
+    <!-- home screen -->
     <string name="search_place_holder">검색</string>
+    <string name="no_registered_book">등록한 책이 없습니다.\n책을 검색해 새롭게 추가해보세요.</string>
+    <string name="no_commented_book">평가한 책이 없습니다.\n읽은 책을 평가해주세요.</string>
+    <string name="error_msg_book_load_fail">책 정보를 정상적으로 불러올 수 없습니다.</string>
+
+    <!-- comment screen -->
+    <string name="comment_title_recent_comments">최근에 작성한 코멘트</string>
+    <string name="comment_text_empty_comment_list">아직 작성한 코멘트가 없네요!\n읽은 책에 대한 코멘트를 작성해보세요.</string>
+    <string name="dialog_description_load_comments_fail">코멘트 리스트를 불러오는 도중\n오류가 발생했습니다.</string>
+    <string name="comment_title_book_has_comment">코멘트를 작성한 책</string>
+
+    <!-- book detail screen -->
+    <string name="dialog_description_book_load_fail">책 정보를 정상적으로 불러오지 못했습니다.\n이전 화면으로 돌아갑니다.</string>
+
+    <!-- edit comment screen -->
+    <string name="edit_comment_title">코멘트 작성</string>
+    <string name="edit_comment_text_field_placeholder">코멘트를 입력해주세요.</string>
+    <string name="dialog_description_warn_non_save">저장하지 않은 변경사항은\n반영되지 않습니다.\n나가시겠습니까?</string>
+    <string name="dialog_description_warn_deletion">코멘트를 삭제하시겠습니까?</string>
+
+    <!-- components -->
+    <string name="section_default_empty_text">등록된 책이 없습니다.\n책을 추가해보세요.</string>
     <string name="wish_button_title">읽고싶어요</string>
     <string name="comment_button_title">코멘트</string>
     <string name="reading_button_title">읽는 중</string>
     <string name="book_description_title">책 소개</string>
     <string name="book_detail_title">책 상세 정보</string>
+
+    <!-- data -->
+    <string name="network_error_search_fail">검색 결과를 받아올 수 없습니다.</string>
+    <string name="network_error_no_connection">네트워크에 연결되어 있지 않습니다.</string>
+
+    <string name="db_error_insertion_fail">데이터 추가/변경에 실패했습니다.</string>
+    <string name="db_error_load_fail">데이터를 정상적으로 불러오지 못했습니다.</string>
+    <string name="db_error_deletion_fail">데이터 삭제에 실패했습니다.</string>
+
+    <!-- common -->
+    <string name="confirm">확인</string>
+    <string name="complete">완료</string>
+    <string name="delete">삭제</string>
+    <string name="cancel">취소</string>
+    <string name="unknown_error">알 수 없는 오류가 발생했습니다.</string>
+
 </resources>
